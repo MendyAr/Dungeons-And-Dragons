@@ -6,8 +6,8 @@ abstract public class Enemy extends Unit{
     protected Integer experienceValue;
 
     //constructors
-    public Enemy(Integer px, Integer py, String name, Integer healthPool, Integer attackPoints, Integer defensePoints, Integer experienceValue) {
-        super(px, py, name, healthPool, attackPoints, defensePoints);
+    public Enemy(char tileChar, String name, Integer healthPool, Integer attackPoints, Integer defensePoints, Integer experienceValue) {
+        super(tileChar, name, healthPool, attackPoints, defensePoints);
         this.experienceValue = experienceValue;
     }
 
@@ -15,5 +15,9 @@ abstract public class Enemy extends Unit{
 
     public String description(){
         return super.description() + "\tExperience Value: " + experienceValue;
+    }
+
+    public Integer getExperienceValue(){
+        return experienceValue;
     }
 }

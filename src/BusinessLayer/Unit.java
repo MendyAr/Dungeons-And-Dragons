@@ -1,5 +1,8 @@
 package BusinessLayer;
 
+import CallBacks.MessageCallback;
+import CallBacks.OnDeathCallback;
+
 abstract public class Unit extends Tile{
 
     //fields
@@ -7,12 +10,16 @@ abstract public class Unit extends Tile{
     protected final String name;
     protected Health health;
     protected Integer attackPoints;
+    protected Integer attackRoll;
     protected Integer defensePoints;
+    protected Integer defenseRoll;
+    protected OnDeathCallback deathCallback;
+    protected MessageCallback msgCallback;
 
     //constructor
 
-    public Unit(Integer px, Integer py, String name, Integer healthPool, Integer attackPoints, Integer defensePoints) {
-        super(px, py);
+    public Unit(char tileChar, String name, Integer healthPool, Integer attackPoints, Integer defensePoints) {
+        super(tileChar);
         this.name = name;
         this.health = new Health(healthPool);
         this.attackPoints = attackPoints;
@@ -25,25 +32,60 @@ abstract public class Unit extends Tile{
         return name;
     }
 
+    public String getAttack() {
+        return "Attack: " + attackPoints;
+    }
+
+    public String getDefense() {
+        return "Defense: " + defensePoints;
+    }
+
     public String description() {
-        return name + "\t\t" + health.toString() + "\tAttack: " + attackPoints + "\tDefense: " + defensePoints;
+        return getName() + "\t\t" + health.toString() + "\t" + getAttack() + "\t" + getDefense();
     }
 
-    private Integer attack() {
-        Integer attackRoll = (int)(Math.random() * (attackPoints + 1));
-        return attackRoll;
+    protected void increaseAtt(Integer value){
+        attackPoints += value;
     }
 
-    private void defend(Integer attackRoll){
-        Integer defenseRoll = (int)(Math.random() * (defensePoints + 1));
-        health.subHP(Math.max(attackRoll-defenseRoll, 0));
-        if (health.getCurrentHP() == 0)
-            onDeath();
+    protected void increaseDef(Integer value){
+        defensePoints += value;
     }
 
-    public void combat(Unit rival){
-        rival.defend(attack());
+    protected void attack() {
+        attackRoll = (int)(Math.random() * (attackPoints + 1));
+        msgCallback.call(String.format("%s rolled %d attack points.", getName(), attackRoll));
+    }
+
+    protected void defend(){
+        defenseRoll= (int)(Math.random() * (defensePoints + 1));
+        msgCallback.call(String.format("%s rolled %d defense points.", getName(), defenseRoll));
+    }
+
+    protected Integer calcDMG(Integer att, Integer def){
+        return Math.max(att-def, 0);
+    }
+
+    protected void receiveDamage(Unit attacker){
+        Integer damage = calcDMG(attacker.attackRoll, defenseRoll);
+        msgCallback.call(String.format("%s dealt %d damage to %s.", attacker.getName(), damage, getName()));
+        health.subHP(damage);
+        if (health.getCurrentHP() == 0){
+            attacker.onKill(this);
+        }
+        onDeath();
+    }
+
+    public void combat(Unit defender){
+        msgCallback.call(String.format("%s engaged in combat with %s.", getName(), defender.getName()));
+        msgCallback.call(description());
+        msgCallback.call(defender.description());
+        attack();
+        defender.defend();
+        defender.receiveDamage(this);
     }
 
     public abstract void onDeath();
+    public abstract void onKill(Unit kill);
+    public abstract void turn();
 }

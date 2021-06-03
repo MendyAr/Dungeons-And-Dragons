@@ -4,7 +4,7 @@ abstract public class Tile {
 
     //fields
 
-    private Character tileChar;
+    protected Character tileChar;
     protected Position position;
 
     //constructor
@@ -20,6 +20,10 @@ abstract public class Tile {
     //getter
     public char getTile() {
         return tileChar;
+    }
+
+    public void setTileChar(Character tileChar) {
+        this.tileChar = tileChar;
     }
 
     public Position getPosition() {

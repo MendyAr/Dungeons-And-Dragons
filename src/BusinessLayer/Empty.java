@@ -6,4 +6,9 @@ public class Empty extends Tile{
     public Empty(){
         super('.');
     }
+
+    @Override
+    public void Interact(Unit unit) {
+
+    }
 }
