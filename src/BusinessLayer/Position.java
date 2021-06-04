@@ -32,7 +32,7 @@ public class Position implements Comparable<Position>{
 
     //methods
     //returns the euclidean distance
-    public double Range(Position P){
+    public double range(Position P){
         if(P == null)
             throw new NullPointerException("Trying to check range to a null Position");
 

@@ -3,6 +3,8 @@ package BusinessLayer;
 import CallBacks.MessageCallback;
 import CallBacks.OnDeathCallback;
 
+import java.util.List;
+
 abstract public class Unit extends Tile{
 
     //fields
@@ -87,5 +89,5 @@ abstract public class Unit extends Tile{
 
     public abstract void onDeath();
     public abstract void onKill(Unit kill);
-    public abstract void turn();
+    public abstract void turn(List<Unit> enemies);
 }
