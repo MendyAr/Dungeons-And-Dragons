@@ -44,17 +44,11 @@ public class Position implements Comparable<Position>{
         if(P == null)
             throw new NullPointerException("Trying to compare to a null Position");
 
-        if(this.positionY < P.positionY | (this.positionY == P.positionY & this.positionX < P.positionX))
+        int yDist = positionY - P.positionY;
+        if(yDist != 0)
         {
-            return -1;
+            return yDist;
         }
-        else if(this.positionY > P.positionY | (this.positionY == P.positionY & this.positionX > P.positionX))
-        {
-            return 1;
-        }
-        else
-        {
-            return 0;
-        }
+        return positionX - P.positionX;
     }
 }

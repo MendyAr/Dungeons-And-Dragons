@@ -20,4 +20,10 @@ abstract public class Enemy extends Unit{
     public Integer getExperienceValue(){
         return experienceValue;
     }
+
+    @Override
+    public void onKill(Unit kill) {
+        msgCallback.call(String.format("%s was killed by %s.", kill.getName(), getName()));
+        kill.onDeath();
+    }
 }
