@@ -1,0 +1,97 @@
+package BusinessLayer;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Warrior extends Player{
+
+    // fields
+
+    protected static final String abilityName = "Avenger’s Shield";
+    protected static final int W_HEALTH_BONUS = 5;
+    protected static final int W_ATTACK_BONUS = 2;
+    protected static final int W_DEFENSE_BONUS = 1;
+
+    private final Integer abilityCooldown;
+    private Integer remainingCooldown;
+
+    // constructor
+
+    public Warrior(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, Integer abilityCooldown) {
+        super(name, healthPool, attackPoints, defensePoints, abilityName);
+        this.abilityCooldown = abilityCooldown;
+        this.remainingCooldown = 0;
+    }
+
+    // getters & setters
+
+    public Integer getAbilityCooldown(){
+        return abilityCooldown;
+    }
+
+    public Integer getRemainingCooldown(){
+        return remainingCooldown;
+    }
+
+    public void decCooldown() {
+        remainingCooldown = Math.min(0, getRemainingCooldown() - 1);
+    }
+
+    public void resetCooldown(){
+            remainingCooldown = 0;
+    }
+
+    // methods
+
+    @Override
+    public void Interact(Unit tile) {
+
+    }
+
+    @Override
+    public void castAbility(List<Enemy> enemies) {
+
+        if(remainingCooldown > 0) {
+            msgCallback.call(getName() + " tried to cast " + abilityName + ", but there is a cooldown: " + abilityCooldown + ".");
+            return;
+        }
+
+        // filter enemies in range
+        List<Enemy> enemiesInRange = new ArrayList<>();
+        for (Enemy enemy: enemies) {
+            if (Range(enemy) < 3) {
+                enemiesInRange.add(enemy);
+            }
+        }
+        if(enemiesInRange.size() != 0) {
+            // choose a random enemy
+            int randomEnemy = (int) ( Math.random() * enemiesInRange.size());
+            Enemy enemy = enemiesInRange.get(randomEnemy);
+            // deal damage
+            enemy.dealDamage(health.getMaxHP() * 0.1);
+        }
+
+        // heal Warrior
+        health.addHP(10 * defensePoints);
+        remainingCooldown = abilityCooldown;
+
+
+    }
+
+    public void lvlUp(){
+        super.lvlUp();
+        resetCooldown();
+        health.increasePool(W_HEALTH_BONUS * level);
+        increaseAtt(W_ATTACK_BONUS * level);
+        increaseDef(W_DEFENSE_BONUS * level);
+    }
+
+    @Override
+    public void turn(List<Unit> enemies) {
+        decCooldown();
+    }
+
+    public String description(){
+        return super.description() + "\tCooldown: " + getRemainingCooldown() + "/" + getAbilityCooldown();
+    }
+
+}
