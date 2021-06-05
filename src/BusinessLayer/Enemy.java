@@ -30,14 +30,17 @@ abstract public class Enemy extends Unit{
 
     @Override
     public void onDeath() {
-        deathCallback.call();
+        deathCallback.death();
     }
 
     protected Unit findClosestTarget(List<Unit> targets){
         Unit closest = targets.get(0);
+        Double minRange = range(closest);
         for (Unit target: targets){
-            if (getPosition().range(target.getPosition()) < getPosition().range(closest.getPosition())){
+            Double newRange = range(target);
+            if (range(target) < minRange){
                 closest = target;
+                minRange = newRange;
             }
         }
         return closest;

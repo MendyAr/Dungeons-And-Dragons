@@ -52,7 +52,7 @@ abstract public class Player extends Unit{
     public void onDeath() {
         setTileChar('X');
         msgCallback.call("You lost, Looser!");
-        deathCallback.call();
+        deathCallback.death();
     }
 
     abstract public void castAbility(List<Enemy> enemies);

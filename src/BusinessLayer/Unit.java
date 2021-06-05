@@ -1,6 +1,7 @@
 package BusinessLayer;
 
 import CallBacks.MessageCallback;
+import CallBacks.MoveCallback;
 import CallBacks.OnDeathCallback;
 
 import java.util.List;
@@ -15,9 +16,10 @@ abstract public class Unit extends Tile{
     protected Integer attackRoll;
     protected Integer defensePoints;
     protected Integer defenseRoll;
+    protected List<Unit> enemies;
     protected OnDeathCallback deathCallback;
     protected MessageCallback msgCallback;
-    protected List<Unit> enemies;
+    protected MoveCallback moveCallback;
 
     //constructor
 
@@ -74,8 +76,8 @@ abstract public class Unit extends Tile{
         msgCallback.call(String.format("%s dealt %d damage to %s.", attacker.getName(), damage, getName()));
         if (health.subHP(damage)){
             attacker.onKill(this);
+            onDeath();
         }
-        onDeath();
     }
 
     public void combat(Unit defender){
@@ -99,10 +101,27 @@ abstract public class Unit extends Tile{
 
     public void visited(Wall wall){}
 
-    public abstract void onDeath();
-    public abstract void onKill(Unit kill);
-    public abstract void turn();
     public abstract void visited(Enemy enemy);
     public abstract void visited(Player player);
 
+    public void moveLeft(){
+        moveCallback.move(new Position(position.getPositionX()-1, position.positionY));
+    }
+
+    public void moveUp(){
+        moveCallback.move(new Position(position.getPositionX(), position.positionY-1));
+    }
+
+    public void moveRight(){
+        moveCallback.move(new Position(position.getPositionX()+1, position.positionY));
+    }
+
+    public void moveDown(){
+        moveCallback.move(new Position(position.getPositionX(), position.positionY+1));
+    }
+
+    public void DoNothing(){}
+    public abstract void turn();
+    public abstract void onKill(Unit kill);
+    public abstract void onDeath();
 }

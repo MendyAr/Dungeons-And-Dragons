@@ -13,7 +13,7 @@ abstract public class Tile {
     }
 
     //initializer
-    public void initialize(Position position){
+    public void init(Position position){
         this.position = position;
     }
 
@@ -38,7 +38,7 @@ abstract public class Tile {
     // methods
 
     //returns the euclidean distance between tiles
-    public double Range(Tile tile){
+    public double range(Tile tile){
         if(tile == null)
             throw new NullPointerException("Trying to check range to a null tile");
 
