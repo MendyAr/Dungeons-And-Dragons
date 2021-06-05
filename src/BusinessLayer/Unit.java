@@ -17,6 +17,7 @@ abstract public class Unit extends Tile{
     protected Integer defenseRoll;
     protected OnDeathCallback deathCallback;
     protected MessageCallback msgCallback;
+    protected List<Unit> enemies;
 
     //constructor
 
@@ -68,11 +69,10 @@ abstract public class Unit extends Tile{
         return Math.max(att-def, 0);
     }
 
-    protected void receiveDamage(Unit attacker){
+    protected void dealDamage(Unit attacker){
         Integer damage = calcDMG(attacker.attackRoll, defenseRoll);
         msgCallback.call(String.format("%s dealt %d damage to %s.", attacker.getName(), damage, getName()));
-        health.subHP(damage);
-        if (health.getCurrentHP() == 0){
+        if (health.subHP(damage)){
             attacker.onKill(this);
         }
         onDeath();
@@ -84,7 +84,7 @@ abstract public class Unit extends Tile{
         msgCallback.call(defender.description());
         attack();
         defender.defend();
-        defender.receiveDamage(this);
+        defender.dealDamage(this);
     }
 
     public void accept(Tile tile){
@@ -101,7 +101,7 @@ abstract public class Unit extends Tile{
 
     public abstract void onDeath();
     public abstract void onKill(Unit kill);
-    public abstract void turn(List<Unit> enemies);
+    public abstract void turn();
     public abstract void visited(Enemy enemy);
     public abstract void visited(Player player);
 

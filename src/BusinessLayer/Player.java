@@ -47,7 +47,6 @@ abstract public class Player extends Unit{
 
     public void onKill(Enemy enemy) {
         addExperience(enemy.getExperienceValue());
-        enemy.onDeath();
     }
 
     public void onDeath() {
