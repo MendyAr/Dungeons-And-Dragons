@@ -16,8 +16,8 @@ public class Warrior extends Player{
 
     // constructor
 
-    public Warrior(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, Integer abilityCooldown) {
-        super(name, healthPool, attackPoints, defensePoints, abilityName);
+    public Warrior(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, List<Enemy> enemies, Integer abilityCooldown) {
+        super(name, healthPool, attackPoints, defensePoints, abilityName, enemies);
         this.abilityCooldown = abilityCooldown;
         this.remainingCooldown = 0;
     }
@@ -32,29 +32,31 @@ public class Warrior extends Player{
         return remainingCooldown;
     }
 
-    public void decCooldown() {
+    protected void decCooldown() {
         remainingCooldown = Math.min(0, getRemainingCooldown() - 1);
     }
 
-    public void resetCooldown(){
+    protected void resetCooldown(){
             remainingCooldown = 0;
     }
 
     // methods
 
     @Override
-    public void Interact(Unit tile) {
-
+    public void turn() {
+        super.turn();
+        decCooldown();
     }
 
     @Override
-    public void castAbility(List<Enemy> enemies) {
+    public void castAbility() {
 
-        if(remainingCooldown > 0) {
+        if(getRemainingCooldown() > 0) {
             msgCallback.call(getName() + " tried to cast " + abilityName + ", but there is a cooldown: " + abilityCooldown + ".");
             return;
         }
 
+        msgCallback.call(getName() + " cast " + abilityName);
         // filter enemies in range
         List<Enemy> enemiesInRange = new ArrayList<>();
         for (Enemy enemy: enemies) {
@@ -67,14 +69,13 @@ public class Warrior extends Player{
             int randomEnemy = (int) ( Math.random() * enemiesInRange.size());
             Enemy enemy = enemiesInRange.get(randomEnemy);
             // deal damage
-            enemy.dealDamage(health.getMaxHP() * 0.1);
+            attackRoll = (int) (health.getMaxHP() * 0.1);
+            enemy.dealDamage(this);
         }
 
         // heal Warrior
         health.addHP(10 * defensePoints);
         remainingCooldown = abilityCooldown;
-
-
     }
 
     public void lvlUp(){
@@ -83,11 +84,7 @@ public class Warrior extends Player{
         health.increasePool(W_HEALTH_BONUS * level);
         increaseAtt(W_ATTACK_BONUS * level);
         increaseDef(W_DEFENSE_BONUS * level);
-    }
 
-    @Override
-    public void turn(List<Unit> enemies) {
-        decCooldown();
     }
 
     public String description(){

@@ -12,20 +12,46 @@ abstract public class Player extends Unit{
     protected static final int ATTACK_BONUS = 4;
     protected static final int DEFENSE_BONUS = 1;
 
+    protected final String abilityName;
     protected Integer level;
     protected Integer experience;
-    protected final String abilityName;
+    protected List<Enemy> enemies;
+
 
     //constructors
 
-    public Player(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, String abilityName) {
+    public Player(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, String abilityName, List<Enemy> enemies) {
         super(playerTile, name, healthPool, attackPoints, defensePoints);
         this.abilityName = abilityName;
+        this.enemies = enemies;
         level = 1;
         experience = 0;
     }
 
     //methods
+
+    @Override
+    public void turn() {
+        getAction();
+    }
+
+    public String getAction(){ return inputProvider.getAction(); }
+
+    @Override
+    public void interact(Unit unit) {
+        unit.visited(this);
+    }
+
+    public void visited(Enemy enemy) { combat(enemy); }
+
+    public void visited(Player player) { combat(player); }
+
+    public void visited(Wall wall) {}
+
+    public void visited(Empty empty) {
+        Position tmp = getPosition();
+        setPosition(empty.getPosition());
+        empty.setPosition(tmp);
 
     protected String getLevel(){
        return String.format("Level: %d",level);
@@ -37,8 +63,10 @@ abstract public class Player extends Unit{
 
     protected void addExperience(Integer value){
         experience += value;
-        while (experience >= level*REQ_EXP)
+        msgCallback.call(getName() + " gained " + value + " experience.");
+        while (experience >= level*REQ_EXP){
             lvlUp();
+        }
     }
 
     protected void lvlUp() {
@@ -73,12 +101,17 @@ abstract public class Player extends Unit{
     }
 
     public void onDeath() {
-        setTileChar('X');
         msgCallback.call("You lost, Looser!");
         deathCallback.death();
     }
 
-    abstract public void castAbility(List<Enemy> enemies);
+    public String description(){
+        return super.description() + "\tLevel: " + level + "\tExperience: " + experience + '/' + (level * REQ_EXP);
+    }
 
+    @Override
+    public String toString(){ return health.getCurrentHP() > 0 ? super.toString() : "X"; }
+
+    abstract public void castAbility();
 
 }
