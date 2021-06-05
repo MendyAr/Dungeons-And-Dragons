@@ -1,6 +1,7 @@
 package BusinessLayer;
 
 import CallBacks.GameOverCallback;
+import util.TileComparator;
 
 import java.util.List;
 

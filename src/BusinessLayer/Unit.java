@@ -1,6 +1,7 @@
 package BusinessLayer;
 
 import CallBacks.MessageCallback;
+import CallBacks.MoveCallback;
 import CallBacks.OnDeathCallback;
 
 import java.util.List;
@@ -15,9 +16,10 @@ abstract public class Unit extends Tile{
     protected Integer attackRoll;
     protected Integer defensePoints;
     protected Integer defenseRoll;
+    protected List<Unit> enemies;
     protected OnDeathCallback deathCallback;
     protected MessageCallback msgCallback;
-    protected List<Unit> enemies;
+    protected MoveCallback moveCallback;
 
     //constructor
 
@@ -29,7 +31,18 @@ abstract public class Unit extends Tile{
         this.defensePoints = defensePoints;
     }
 
-    //methods
+    //initializers
+    public void init(Position position, List<Unit> enemies){
+        super.init(position);
+        this.enemies = enemies;
+    }
+
+    public void init(Position position, List<Unit> enemies, OnDeathCallback deathCallback, MessageCallback msgCallback, MoveCallback moveCallback){
+        init(position, enemies);
+        this.deathCallback = deathCallback;
+        this.msgCallback = msgCallback;
+        this.moveCallback = moveCallback;
+    }
 
     public String getName() {
         return name;
@@ -43,8 +56,10 @@ abstract public class Unit extends Tile{
         return "Defense: " + defensePoints;
     }
 
+    //methods
+
     public String description() {
-        return getName() + "\t\t" + health.toString() + "\t" + getAttack() + "\t" + getDefense();
+        return String.format("%s\t\t%s\t%s\t%s", getName(), health.toString(), getAttack(), getDefense());
     }
 
     protected void increaseAtt(Integer value){
@@ -73,9 +88,9 @@ abstract public class Unit extends Tile{
         Integer damage = calcDMG(attacker.attackRoll, defenseRoll);
         msgCallback.call(String.format("%s dealt %d damage to %s.", attacker.getName(), damage, getName()));
         if (health.subHP(damage)){
-            attacker.onKill(this);
+            onKill(attacker);
+            onDeath();
         }
-        onDeath();
     }
 
     public void combat(Unit defender){
@@ -99,10 +114,29 @@ abstract public class Unit extends Tile{
 
     public void visited(Wall wall){}
 
-    public abstract void onDeath();
-    public abstract void onKill(Unit kill);
-    public abstract void turn();
     public abstract void visited(Enemy enemy);
     public abstract void visited(Player player);
 
+    public void moveLeft(){
+        moveCallback.move(new Position(position.getPositionX()-1, position.positionY));
+    }
+
+    public void moveUp(){
+        moveCallback.move(new Position(position.getPositionX(), position.positionY-1));
+    }
+
+    public void moveRight(){
+        moveCallback.move(new Position(position.getPositionX()+1, position.positionY));
+    }
+
+    public void moveDown(){
+        moveCallback.move(new Position(position.getPositionX(), position.positionY+1));
+    }
+
+    public void DoNothing(){}
+    public abstract void turn();
+    public abstract void onKill(Unit killer);
+    public abstract void onEnemyKill(Enemy kill);
+    public abstract void onPlayerKill(Player kill);
+    public abstract void onDeath();
 }

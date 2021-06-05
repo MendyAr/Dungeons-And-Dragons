@@ -15,10 +15,19 @@ public class Monster extends Enemy{
 
     //methods
 
+    public String getVisionRange(){
+        return String.format("Vision Range: %d", visionRange);
+    }
+
+    @Override
+    public String description() {
+        return String.format("%s\t%s", super.description(), getVisionRange());
+    }
+
     @Override
     public void turn() {
         Unit closest = findClosestTarget(enemies);
-        if (getPosition().range(closest.getPosition()) < visionRange) {
+        if (range(closest) < visionRange) {
             Integer dx = getPosition().getPositionX() - closest.getPosition().getPositionX();
             Integer dy = getPosition().getPositionY() - closest.getPosition().getPositionY();
             if (Math.abs(dx) > Math.abs(dy)) {
@@ -37,15 +46,6 @@ public class Monster extends Enemy{
         } else {
             //randomAction
         }
-    }
-
-    @Override
-    public void visited(Enemy enemy) {
-    }
-
-    @Override
-    public void visited(Player player) {
-        combat(player);
     }
 
     @Override

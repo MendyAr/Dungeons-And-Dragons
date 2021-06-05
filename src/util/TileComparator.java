@@ -1,4 +1,6 @@
-package BusinessLayer;
+package util;
+import BusinessLayer.Tile;
+
 import java.util.Comparator;
 
 public class TileComparator implements Comparator<Tile> {

@@ -52,6 +52,13 @@ abstract public class Player extends Unit{
         Position tmp = getPosition();
         setPosition(empty.getPosition());
         empty.setPosition(tmp);
+
+    protected String getLevel(){
+       return String.format("Level: %d",level);
+    }
+
+    protected String getExperience(){
+        return String.format("Experience: %d/%d", experience, (level * REQ_EXP));
     }
 
     protected void addExperience(Integer value){
@@ -70,14 +77,32 @@ abstract public class Player extends Unit{
         increaseDef(DEFENSE_BONUS * level);
     }
 
+    public String description(){
+        return String.format("%s\t%s\t%s", super.description(), getLevel() ,getExperience());
+    }
+
     @Override
-    public void onKill(Unit unit) {
-        addExperience(enemy.getExperienceValue());
+    public void onKill(Unit killer) {
+        killer.onPlayerKill(this);
+    }
+
+    @Override
+    public void onEnemyKill(Enemy kill) {
+        Integer experience = kill.getExperienceValue();
+        msgCallback.call(String.format("%s died. %s gained %d experience.", kill.getName(), getName(), experience));
+        addExperience(experience);
+    }
+
+    @Override
+    public void onPlayerKill(Player kill) {
+        Integer experience = kill.experience;
+        msgCallback.call(String.format("%s died. %s gained %d experience.", kill.getName(), getName(), experience));
+        addExperience(experience);
     }
 
     public void onDeath() {
         msgCallback.call("You lost, Looser!");
-        deathCallback.call();
+        deathCallback.death();
     }
 
     public String description(){
