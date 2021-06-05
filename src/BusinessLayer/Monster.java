@@ -14,38 +14,42 @@ public class Monster extends Enemy{
     }
 
     //methods
-    @Override
-    public void Interact(Unit unit) {
-
-    }
-
-    @Override
-    public void onDeath() {
-
-    }
 
     @Override
     public void turn(List<Unit> players) {
         Unit closest = findClosestTarget(players);
-        if (getPosition().range(closest.getPosition()) < visionRange){
+        if (getPosition().range(closest.getPosition()) < visionRange) {
             Integer dx = getPosition().getPositionX() - closest.getPosition().getPositionX();
             Integer dy = getPosition().getPositionY() - closest.getPosition().getPositionY();
-            if (Math.abs(dx) > Math.abs(dy)){
-                if (dx > 0){
-
+            if (Math.abs(dx) > Math.abs(dy)) {
+                if (dx > 0) {
+                    //moveLeft
+                } else {
+                    //moveRight
+                }
+            } else {
+                if (dy > 0) {
+                    //moveUp
+                } else {
+                    //moveDown
                 }
             }
+        } else {
+            //randomAction
         }
-
     }
 
-    protected Unit findClosestTarget(List<Unit> targets){
-        Unit closest = targets.get(0);
-        for (Unit target: targets){
-            if (getPosition().range(target.getPosition()) < getPosition().range(closest.getPosition())){
-                closest = target;
-            }
-        }
-        return closest;
+    @Override
+    public void visited(Enemy enemy) {
+    }
+
+    @Override
+    public void visited(Player player) {
+        combat(player);
+    }
+
+    @Override
+    public void interact(Unit unit) {
+        unit.visited(this);
     }
 }

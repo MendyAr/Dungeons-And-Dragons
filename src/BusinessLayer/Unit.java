@@ -87,7 +87,22 @@ abstract public class Unit extends Tile{
         defender.receiveDamage(this);
     }
 
+    public void accept(Tile tile){
+        tile.interact(this);
+    }
+
+    public void visited(Empty empty) {
+        Position tmp = empty.getPosition();
+        empty.setPosition(getPosition());
+        setPosition(tmp);
+    }
+
+    public void visited(Wall wall){}
+
     public abstract void onDeath();
     public abstract void onKill(Unit kill);
     public abstract void turn(List<Unit> enemies);
+    public abstract void visited(Enemy enemy);
+    public abstract void visited(Player player);
+
 }

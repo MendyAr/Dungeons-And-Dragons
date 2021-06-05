@@ -42,12 +42,12 @@ abstract public class Tile {
         if(tile == null)
             throw new NullPointerException("Trying to check range to a null tile");
 
-        return this.position.Range(tile.position);
+        return this.position.range(tile.position);
     }
 
     public String toString(){
         return tileChar.toString();
     }
 
-    public abstract void Interact(Unit unit);
+    public abstract void interact(Unit unit);
 }

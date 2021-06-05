@@ -1,5 +1,7 @@
 package BusinessLayer;
 
+import java.util.List;
+
 abstract public class Enemy extends Unit{
 
     //fields
@@ -25,5 +27,20 @@ abstract public class Enemy extends Unit{
     public void onKill(Unit kill) {
         msgCallback.call(String.format("%s was killed by %s.", kill.getName(), getName()));
         kill.onDeath();
+    }
+
+    @Override
+    public void onDeath() {
+        deathCallback.call();
+    }
+
+    protected Unit findClosestTarget(List<Unit> targets){
+        Unit closest = targets.get(0);
+        for (Unit target: targets){
+            if (getPosition().range(target.getPosition()) < getPosition().range(closest.getPosition())){
+                closest = target;
+            }
+        }
+        return closest;
     }
 }

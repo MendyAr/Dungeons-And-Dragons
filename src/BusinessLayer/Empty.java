@@ -8,7 +8,7 @@ public class Empty extends Tile{
     }
 
     @Override
-    public void Interact(Unit unit) {
-
+    public void interact(Unit unit) {
+        unit.visited(this);
     }
 }
