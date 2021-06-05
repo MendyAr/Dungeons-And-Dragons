@@ -21,8 +21,8 @@ public class Mage extends Player {
 
     // constructor
 
-    public Mage(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, Integer manaPool, Integer manaCost, Integer spellPower, Integer hitsCount, Integer abilityRange) {
-        super(name, healthPool, attackPoints, defensePoints, abilityName);
+    public Mage(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, List<Enemy> enemies, Integer manaPool, Integer manaCost, Integer spellPower, Integer hitsCount, Integer abilityRange) {
+        super(name, healthPool, attackPoints, defensePoints, abilityName, enemies);
         this.manaPool = manaPool;
         this.currentMana = manaPool/4;
         this.manaCost = manaCost;
@@ -64,12 +64,12 @@ public class Mage extends Player {
     // methods
 
     @Override
-    public void Interact(Unit tile) {
-
+    public void interact(Unit unit) {
+        unit.visited(this);
     }
 
         @Override
-        public void castAbility(List<Enemy> enemies) {
+        public void castAbility() {
 
             if(getCurrentMana() < getManaCost()) {
                 msgCallback.call(getName() + " tried to cast " + abilityName + ", but he is missing " + (getManaCost()-getCurrentMana())  + " mana.");

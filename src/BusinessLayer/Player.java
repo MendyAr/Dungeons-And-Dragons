@@ -12,26 +12,45 @@ abstract public class Player extends Unit{
     protected static final int ATTACK_BONUS = 4;
     protected static final int DEFENSE_BONUS = 1;
 
+    protected final String abilityName;
     protected Integer level;
     protected Integer experience;
-    protected final String abilityName;
+    protected List<Enemy> enemies;
+
 
     //constructors
 
-    public Player(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, String abilityName) {
+    public Player(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, String abilityName, List<Enemy> enemies) {
         super(playerTile, name, healthPool, attackPoints, defensePoints);
         this.abilityName = abilityName;
+        this.enemies = enemies;
         level = 1;
         experience = 0;
     }
 
     //methods
 
+    @Override
+    public void interact(Unit unit) {
+        unit.visited(this);
+    }
+
+    public void visited(Enemy enemy) { combat(enemy); }
+
+    public void visited(Wall wall) {}
+
+    public void visited(Empty empty) {
+        Position tmp = getPosition();
+        setPosition(empty.getPosition());
+        empty.setPosition(tmp);
+    }
+
     protected void addExperience(Integer value){
         experience += value;
         msgCallback.call(getName() + " gained " + value + " experience.");
-        while (experience >= level*REQ_EXP)
+        while (experience >= level*REQ_EXP){
             lvlUp();
+        }
     }
 
     protected void lvlUp() {
@@ -56,7 +75,6 @@ abstract public class Player extends Unit{
         deathCallback.call();
     }
 
-    abstract public void castAbility(List<Enemy> enemies);
-
+    abstract public void castAbility();
 
 }

@@ -16,8 +16,8 @@ public class Warrior extends Player{
 
     // constructor
 
-    public Warrior(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, Integer abilityCooldown) {
-        super(name, healthPool, attackPoints, defensePoints, abilityName);
+    public Warrior(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, List<Enemy> enemies, Integer abilityCooldown) {
+        super(name, healthPool, attackPoints, defensePoints, abilityName, enemies);
         this.abilityCooldown = abilityCooldown;
         this.remainingCooldown = 0;
     }
@@ -43,12 +43,7 @@ public class Warrior extends Player{
     // methods
 
     @Override
-    public void Interact(Unit tile) {
-
-    }
-
-    @Override
-    public void castAbility(List<Enemy> enemies) {
+    public void castAbility() {
 
         if(getRemainingCooldown() > 0) {
             msgCallback.call(getName() + " tried to cast " + abilityName + ", but there is a cooldown: " + abilityCooldown + ".");
@@ -68,7 +63,8 @@ public class Warrior extends Player{
             int randomEnemy = (int) ( Math.random() * enemiesInRange.size());
             Enemy enemy = enemiesInRange.get(randomEnemy);
             // deal damage
-            enemy.dealDamage(health.getMaxHP() * 0.1);
+            attackRoll = (int) (health.getMaxHP() * 0.1);
+            enemy.dealDamage(this);
         }
 
         // heal Warrior
@@ -89,6 +85,8 @@ public class Warrior extends Player{
 
     @Override
     public void turn(List<Unit> enemies) {
+
+
         decCooldown();
     }
 
