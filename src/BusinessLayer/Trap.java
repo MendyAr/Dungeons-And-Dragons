@@ -24,10 +24,10 @@ public class Trap extends Enemy{
     }
 
     @Override
-    public void turn(List<Unit> players) {
+    public void turn() {
         tickCount = (tickCount+1)%(visibilityTime+invisibilityTime);
         visible = tickCount < visibilityTime;
-        Unit closest = findClosestTarget(players);
+        Unit closest = findClosestTarget(enemies);
         if (getPosition().range(closest.getPosition()) < 2)
             combat(closest);
     }

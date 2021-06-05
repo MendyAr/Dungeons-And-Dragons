@@ -16,8 +16,8 @@ public class Monster extends Enemy{
     //methods
 
     @Override
-    public void turn(List<Unit> players) {
-        Unit closest = findClosestTarget(players);
+    public void turn() {
+        Unit closest = findClosestTarget(enemies);
         if (getPosition().range(closest.getPosition()) < visionRange) {
             Integer dx = getPosition().getPositionX() - closest.getPosition().getPositionX();
             Integer dy = getPosition().getPositionY() - closest.getPosition().getPositionY();

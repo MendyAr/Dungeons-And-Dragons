@@ -26,7 +26,6 @@ abstract public class Enemy extends Unit{
     @Override
     public void onKill(Unit kill) {
         msgCallback.call(String.format("%s was killed by %s.", kill.getName(), getName()));
-        kill.onDeath();
     }
 
     @Override

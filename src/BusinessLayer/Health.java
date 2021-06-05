@@ -30,12 +30,14 @@ public class Health {
         init();
     }
 
-    public void addHP(Integer addition){
+    public Boolean addHP(Integer addition){
         healthAmount = Math.min(healthAmount + addition, healthPool);
+        return healthAmount == healthPool;
     }
 
-    public void subHP(Integer subtraction){
+    public Boolean subHP(Integer subtraction){
         healthAmount = Math.max(healthAmount - subtraction, 0);
+        return healthAmount == 0;
     }
 
     public String toString(){
