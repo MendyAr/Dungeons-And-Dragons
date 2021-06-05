@@ -29,6 +29,7 @@ abstract public class Player extends Unit{
 
     protected void addExperience(Integer value){
         experience += value;
+        msgCallback.call(getName() + " gained " + value + " experience.");
         while (experience >= level*REQ_EXP)
             lvlUp();
     }

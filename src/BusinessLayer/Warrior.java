@@ -32,11 +32,11 @@ public class Warrior extends Player{
         return remainingCooldown;
     }
 
-    public void decCooldown() {
+    protected void decCooldown() {
         remainingCooldown = Math.min(0, getRemainingCooldown() - 1);
     }
 
-    public void resetCooldown(){
+    protected void resetCooldown(){
             remainingCooldown = 0;
     }
 
@@ -50,11 +50,12 @@ public class Warrior extends Player{
     @Override
     public void castAbility(List<Enemy> enemies) {
 
-        if(remainingCooldown > 0) {
+        if(getRemainingCooldown() > 0) {
             msgCallback.call(getName() + " tried to cast " + abilityName + ", but there is a cooldown: " + abilityCooldown + ".");
             return;
         }
 
+        msgCallback.call(getName() + " cast " + abilityName);
         // filter enemies in range
         List<Enemy> enemiesInRange = new ArrayList<>();
         for (Enemy enemy: enemies) {
@@ -83,6 +84,7 @@ public class Warrior extends Player{
         health.increasePool(W_HEALTH_BONUS * level);
         increaseAtt(W_ATTACK_BONUS * level);
         increaseDef(W_DEFENSE_BONUS * level);
+
     }
 
     @Override
