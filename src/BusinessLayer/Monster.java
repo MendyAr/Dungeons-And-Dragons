@@ -15,6 +15,15 @@ public class Monster extends Enemy{
 
     //methods
 
+    public String getVisionRange(){
+        return String.format("Vision Range: %d", visionRange);
+    }
+
+    @Override
+    public String description() {
+        return String.format("%s\t%s", super.description(), getVisionRange());
+    }
+
     @Override
     public void turn() {
         Unit closest = findClosestTarget(enemies);
@@ -37,15 +46,6 @@ public class Monster extends Enemy{
         } else {
             //randomAction
         }
-    }
-
-    @Override
-    public void visited(Enemy enemy) {
-    }
-
-    @Override
-    public void visited(Player player) {
-        combat(player);
     }
 
     @Override

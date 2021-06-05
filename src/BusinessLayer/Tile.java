@@ -14,16 +14,13 @@ abstract public class Tile {
 
     //initializer
     public void init(Position position){
-        this.position = position;
+        setPosition(position);
     }
 
     //getter
-    public char getTile() {
-        return tileChar;
-    }
 
-    public void setTileChar(Character tileChar) {
-        this.tileChar = tileChar;
+    public Character getTileChar() {
+        return tileChar;
     }
 
     public Position getPosition() {
@@ -33,6 +30,10 @@ abstract public class Tile {
     //setters
     public void setPosition(Position position) {
         this.position = position;
+    }
+
+    public void setTileChar(Character tileChar) {
+        this.tileChar = tileChar;
     }
 
     // methods

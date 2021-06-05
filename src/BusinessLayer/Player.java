@@ -27,6 +27,14 @@ abstract public class Player extends Unit{
 
     //methods
 
+    protected String getLevel(){
+       return String.format("Level: %d",level);
+    }
+
+    protected String getExperience(){
+        return String.format("Experience: %d/%d", experience, (level * REQ_EXP));
+    }
+
     protected void addExperience(Integer value){
         experience += value;
         while (experience >= level*REQ_EXP)
@@ -42,11 +50,24 @@ abstract public class Player extends Unit{
     }
 
     public String description(){
-        return super.description() + "\tLevel: " + level + "\tExperience: " + experience + '/' + (level * REQ_EXP);
+        return String.format("%s\t%s\t%s", super.description(), getLevel() ,getExperience());
     }
 
-    public void onKill(Enemy enemy) {
-        addExperience(enemy.getExperienceValue());
+    @Override
+    public void onKill(Unit killer) {
+        killer.onPlayerKill(this);
+    }
+
+    @Override
+    public void onEnemyKill(Enemy kill) {
+        Integer experience = kill.getExperienceValue();
+        msgCallback.call(String.format("%s died. %s gained %d experience.", kill.getName(), getName(), experience));
+        addExperience(experience);
+    }
+
+    @Override
+    public void onPlayerKill(Player kill) {
+
     }
 
     public void onDeath() {

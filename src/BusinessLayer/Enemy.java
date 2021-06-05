@@ -15,8 +15,12 @@ abstract public class Enemy extends Unit{
 
     //methods
 
+    public String getExperience(){
+        return String.format("Experience Value: %d", getExperienceValue());
+    }
+
     public String description(){
-        return super.description() + "\tExperience Value: " + experienceValue;
+        return String.format("%s\t%s", super.description(), getExperience());
     }
 
     public Integer getExperienceValue(){
@@ -24,7 +28,17 @@ abstract public class Enemy extends Unit{
     }
 
     @Override
-    public void onKill(Unit kill) {
+    public void onKill(Unit killer) {
+        killer.onEnemyKill(this);
+    }
+
+    @Override
+    public void onEnemyKill(Enemy kill) {
+        msgCallback.call(String.format("%s was killed by %s.", kill.getName(), getName()));
+    }
+
+    @Override
+    public void onPlayerKill(Player kill) {
         msgCallback.call(String.format("%s was killed by %s.", kill.getName(), getName()));
     }
 
@@ -45,4 +59,15 @@ abstract public class Enemy extends Unit{
         }
         return closest;
     }
+
+    @Override
+    public void visited(Enemy enemy) {
+    }
+
+    @Override
+    public void visited(Player player) {
+        combat(player);
+    }
+
+
 }
