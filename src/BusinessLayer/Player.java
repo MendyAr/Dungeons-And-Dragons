@@ -67,7 +67,9 @@ abstract public class Player extends Unit{
 
     @Override
     public void onPlayerKill(Player kill) {
-
+        Integer experience = kill.experience;
+        msgCallback.call(String.format("%s died. %s gained %d experience.", kill.getName(), getName(), experience));
+        addExperience(experience);
     }
 
     public void onDeath() {
