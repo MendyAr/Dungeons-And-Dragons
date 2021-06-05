@@ -64,56 +64,53 @@ public class Mage extends Player {
     // methods
 
     @Override
-    public void interact(Unit unit) {
-        unit.visited(this);
+    public void turn() {
+        super.turn();
+        regenerateMana(1 * level);
     }
 
-        @Override
-        public void castAbility() {
+    @Override
+    public void castAbility() {
 
-            if(getCurrentMana() < getManaCost()) {
-                msgCallback.call(getName() + " tried to cast " + abilityName + ", but he is missing " + (getManaCost()-getCurrentMana())  + " mana.");
-                return;
+        if(getCurrentMana() < getManaCost()) {
+            msgCallback.call(getName() + " tried to cast " + abilityName + ", but missing " + (getManaCost()-getCurrentMana())  + " mana.");
+            return;
+        }
+
+        msgCallback.call(getName() + " cast " + abilityName);
+        // filter enemies in range
+        List<Enemy> enemiesInRange = new ArrayList<>();
+        for (Enemy enemy: enemies) {
+            if (Range(enemy) < abilityRange) {
+                enemiesInRange.add(enemy);
             }
-
-            msgCallback.call(getName() + " cast " + abilityName);
-            // filter enemies in range
-            List<Enemy> enemiesInRange = new ArrayList<>();
-            for (Enemy enemy: enemies) {
-                if (Range(enemy) < abilityRange) {
-                    enemiesInRange.add(enemy);
-                }
+        }
+        int hits = 0;
+        attackRoll = getSpellPower();
+        while(enemiesInRange.size() != 0 & hits < hitsCount) {
+            // choose a random enemy
+            int randomEnemy = (int) ( Math.random() * enemiesInRange.size());
+            Enemy enemy = enemiesInRange.get(randomEnemy);
+            // deal damage
+            enemy.dealDamage(this);
+            hits++;
+            if(enemy.health.getCurrentHP() == 0){
+                enemiesInRange.remove(enemy);
             }
-            int hits = 0;
-            while(enemiesInRange.size() != 0 & hits < hitsCount) {
-                // choose a random enemy
-                int randomEnemy = (int) ( Math.random() * enemiesInRange.size());
-                Enemy enemy = enemiesInRange.get(randomEnemy);
-                // deal damage
-                enemy.dealDamage(getSpellPower());
-                hits++;
-                if(enemy.health.getCurrentHP() == 0){
-                    enemiesInRange.remove(enemy);
-                }
-            }
-            decreaseMana(getManaCost());
         }
+        decreaseMana(getManaCost());
+    }
 
-        public void lvlUp(){
-            super.lvlUp();
-            increaseManaPool(MANA_POOL_BONUS * level);
-            regenerateMana((int)(getManaPool() * MANA_REGENERATION_BONUS));
-            increaseSpellPower(SPELL_POWER_BONUS * level);
-        }
+    public void lvlUp(){
+        super.lvlUp();
+        increaseManaPool(MANA_POOL_BONUS * level);
+        regenerateMana((int)(getManaPool() * MANA_REGENERATION_BONUS));
+        increaseSpellPower(SPELL_POWER_BONUS * level);
+    }
 
-        @Override
-        public void turn(List<Unit> enemies) {
-            regenerateMana(1 * level);
-        }
-
-        public String description(){
-            return super.description() + "\tMana: " + getCurrentMana() + "/" + getManaPool() +  "\tSpell Power: " + getSpellPower();
-        }
+    public String description(){
+        return super.description() + "\tMana: " + getCurrentMana() + "/" + getManaPool() +  "\tSpell Power: " + getSpellPower();
+    }
 
 }
 

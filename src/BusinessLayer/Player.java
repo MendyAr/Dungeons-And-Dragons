@@ -31,11 +31,20 @@ abstract public class Player extends Unit{
     //methods
 
     @Override
+    public void turn() {
+        getAction();
+    }
+
+    public String getAction(){ return inputProvider.getAction(); }
+
+    @Override
     public void interact(Unit unit) {
         unit.visited(this);
     }
 
     public void visited(Enemy enemy) { combat(enemy); }
+
+    public void visited(Player player) { combat(player); }
 
     public void visited(Wall wall) {}
 
@@ -61,19 +70,22 @@ abstract public class Player extends Unit{
         increaseDef(DEFENSE_BONUS * level);
     }
 
-    public String description(){
-        return super.description() + "\tLevel: " + level + "\tExperience: " + experience + '/' + (level * REQ_EXP);
-    }
-
-    public void onKill(Enemy enemy) {
+    @Override
+    public void onKill(Unit unit) {
         addExperience(enemy.getExperienceValue());
     }
 
     public void onDeath() {
-        setTileChar('X');
         msgCallback.call("You lost, Looser!");
         deathCallback.call();
     }
+
+    public String description(){
+        return super.description() + "\tLevel: " + level + "\tExperience: " + experience + '/' + (level * REQ_EXP);
+    }
+
+    @Override
+    public String toString(){ return health.getCurrentHP() > 0 ? super.toString() : "X"; }
 
     abstract public void castAbility();
 

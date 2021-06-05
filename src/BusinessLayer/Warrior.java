@@ -43,6 +43,12 @@ public class Warrior extends Player{
     // methods
 
     @Override
+    public void turn() {
+        super.turn();
+        decCooldown();
+    }
+
+    @Override
     public void castAbility() {
 
         if(getRemainingCooldown() > 0) {
@@ -70,8 +76,6 @@ public class Warrior extends Player{
         // heal Warrior
         health.addHP(10 * defensePoints);
         remainingCooldown = abilityCooldown;
-
-
     }
 
     public void lvlUp(){
@@ -81,13 +85,6 @@ public class Warrior extends Player{
         increaseAtt(W_ATTACK_BONUS * level);
         increaseDef(W_DEFENSE_BONUS * level);
 
-    }
-
-    @Override
-    public void turn(List<Unit> enemies) {
-
-
-        decCooldown();
     }
 
     public String description(){
