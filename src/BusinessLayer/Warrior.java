@@ -2,7 +2,7 @@ package BusinessLayer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Warrior extends Player{
+public class Warrior extends Player {
 
     // fields
 
@@ -24,11 +24,11 @@ public class Warrior extends Player{
 
     // getters & setters
 
-    public Integer getAbilityCooldown(){
+    public Integer getAbilityCooldown() {
         return abilityCooldown;
     }
 
-    public Integer getRemainingCooldown(){
+    public Integer getRemainingCooldown() {
         return remainingCooldown;
     }
 
@@ -36,8 +36,8 @@ public class Warrior extends Player{
         remainingCooldown = Math.min(0, getRemainingCooldown() - 1);
     }
 
-    protected void resetCooldown(){
-            remainingCooldown = 0;
+    protected void resetCooldown() {
+        remainingCooldown = 0;
     }
 
     // methods
@@ -51,7 +51,7 @@ public class Warrior extends Player{
     @Override
     public void castAbility() {
 
-        if(getRemainingCooldown() > 0) {
+        if (getRemainingCooldown() > 0) {
             msgCallback.call(getName() + " tried to cast " + abilityName + ", but there is a cooldown: " + abilityCooldown + ".");
             return;
         }
@@ -59,14 +59,14 @@ public class Warrior extends Player{
         msgCallback.call(getName() + " cast " + abilityName);
         // filter enemies in range
         List<Enemy> enemiesInRange = new ArrayList<>();
-        for (Enemy enemy: enemies) {
+        for (Enemy enemy : enemies) {
             if (Range(enemy) < 3) {
                 enemiesInRange.add(enemy);
             }
         }
-        if(enemiesInRange.size() != 0) {
+        if (enemiesInRange.size() != 0) {
             // choose a random enemy
-            int randomEnemy = (int) ( Math.random() * enemiesInRange.size());
+            int randomEnemy = (int) (Math.random() * enemiesInRange.size());
             Enemy enemy = enemiesInRange.get(randomEnemy);
             // deal damage
             attackRoll = (int) (health.getMaxHP() * 0.1);
@@ -78,7 +78,7 @@ public class Warrior extends Player{
         remainingCooldown = abilityCooldown;
     }
 
-    public void lvlUp(){
+    public void lvlUp() {
         super.lvlUp();
         resetCooldown();
         health.increasePool(W_HEALTH_BONUS * level);
@@ -87,8 +87,11 @@ public class Warrior extends Player{
 
     }
 
-    public String description(){
-        return super.description() + "\tCooldown: " + getRemainingCooldown() + "/" + getAbilityCooldown();
+    public String getCooldownString() {
+        return String.format("Cooldown: %d/%d", getRemainingCooldown(), getAbilityCooldown());
     }
 
+    public String description() {
+        return String.format("%s\t%s", super.description(), getCooldownString());
+    }
 }

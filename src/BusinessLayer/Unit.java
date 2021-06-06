@@ -48,18 +48,18 @@ abstract public class Unit extends Tile{
         return name;
     }
 
-    public String getAttack() {
+    public String getAttackString() {
         return "Attack: " + attackPoints;
     }
 
-    public String getDefense() {
+    public String getDefenseString() {
         return "Defense: " + defensePoints;
     }
 
     //methods
 
     public String description() {
-        return String.format("%s\t\t%s\t%s\t%s", getName(), health.toString(), getAttack(), getDefense());
+        return String.format("%s\t\t%s\t%s\t%s", getName(), health.toString(), getAttackString(), getDefenseString());
     }
 
     protected void increaseAtt(Integer value){

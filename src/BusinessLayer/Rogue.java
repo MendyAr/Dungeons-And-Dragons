@@ -2,7 +2,7 @@ package BusinessLayer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Rogue extends Player{
+public class Rogue extends Player {
 
     // fields
 
@@ -25,21 +25,27 @@ public class Rogue extends Player{
 
     // getters & setters
 
-    public Integer getEnergy(){
+    public Integer getEnergy() {
         return energy;
     }
 
-    public Integer getAbilityCost() {return abilityCost;}
-
-    protected void increaseEnergy(Integer increaseVal){
-        energy = Math.min( energy + increaseVal, energyPool);
+    public static Integer getEnergyPool() {
+        return energyPool;
     }
 
-    protected void decreaseEnergy(Integer decreaseVal){
-        energy = Math.max( energy - decreaseVal, 0);
+    public Integer getAbilityCost() {
+        return abilityCost;
     }
 
-    protected void resetEnergy(){
+    protected void increaseEnergy(Integer increaseVal) {
+        energy = Math.min(energy + increaseVal, energyPool);
+    }
+
+    protected void decreaseEnergy(Integer decreaseVal) {
+        energy = Math.max(energy - decreaseVal, 0);
+    }
+
+    protected void resetEnergy() {
         energy = energyPool;
     }
 
@@ -54,35 +60,38 @@ public class Rogue extends Player{
     @Override
     public void castAbility() {
 
-        if(getEnergy() < getAbilityCost()) {
-            msgCallback.call(getName() + " tried to cast " + abilityName + ", but missing " + (getAbilityCost()-getEnergy())  + " energy.");
+        if (getEnergy() < getAbilityCost()) {
+            msgCallback.call(getName() + " tried to cast " + abilityName + ", but missing " + (getAbilityCost() - getEnergy()) + " energy.");
             return;
         }
 
         msgCallback.call(getName() + " cast " + abilityName);
         // filter enemies in range
         List<Enemy> enemiesInRange = new ArrayList<>();
-        for (Enemy enemy: enemies) {
+        for (Enemy enemy : enemies) {
             if (Range(enemy) < 2) {
                 enemiesInRange.add(enemy);
             }
         }
         attackRoll = attackPoints;
-        for (Enemy enemy: enemiesInRange) {
+        for (Enemy enemy : enemiesInRange) {
             enemy.dealDamage(this);
         }
 
         decreaseEnergy(getAbilityCost());
     }
 
-    public void lvlUp(){
+    public void lvlUp() {
         super.lvlUp();
         resetEnergy();
         increaseAtt(R_ATTACK_BONUS * level);
     }
 
-    public String description(){
-        return super.description() + "\tEnergy: " + getEnergy() + "/" + energyPool;
+    public String getEnergyString() {
+        return String.format("Energy: %d/%d", getEnergy(), getEnergyPool());
     }
 
+    public String description() {
+        return String.format("%s\t%s", super.description(), getEnergyString());
+    }
 }

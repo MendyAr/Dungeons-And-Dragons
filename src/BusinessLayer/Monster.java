@@ -15,13 +15,13 @@ public class Monster extends Enemy{
 
     //methods
 
-    public String getVisionRange(){
+    public String getVisionRangeString(){
         return String.format("Vision Range: %d", visionRange);
     }
 
     @Override
     public String description() {
-        return String.format("%s\t%s", super.description(), getVisionRange());
+        return String.format("%s\t%s", super.description(), getVisionRangeString());
     }
 
     @Override
@@ -32,15 +32,15 @@ public class Monster extends Enemy{
             Integer dy = getPosition().getPositionY() - closest.getPosition().getPositionY();
             if (Math.abs(dx) > Math.abs(dy)) {
                 if (dx > 0) {
-                    //moveLeft
+                    moveLeft();
                 } else {
-                    //moveRight
+                    moveRight();
                 }
             } else {
                 if (dy > 0) {
-                    //moveUp
+                    moveUp();
                 } else {
-                    //moveDown
+                    moveDown();
                 }
             }
         } else {

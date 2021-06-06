@@ -52,12 +52,13 @@ abstract public class Player extends Unit{
         Position tmp = getPosition();
         setPosition(empty.getPosition());
         empty.setPosition(tmp);
+    }
 
-    protected String getLevel(){
+    protected String getLevelString(){
        return String.format("Level: %d",level);
     }
 
-    protected String getExperience(){
+    protected String getExperienceString(){
         return String.format("Experience: %d/%d", experience, (level * REQ_EXP));
     }
 
@@ -78,7 +79,7 @@ abstract public class Player extends Unit{
     }
 
     public String description(){
-        return String.format("%s\t%s\t%s", super.description(), getLevel() ,getExperience());
+        return String.format("%s\t%s\t%s", super.description(), getLevelString() ,getExperienceString());
     }
 
     @Override
@@ -103,10 +104,6 @@ abstract public class Player extends Unit{
     public void onDeath() {
         msgCallback.call("You lost, Looser!");
         deathCallback.death();
-    }
-
-    public String description(){
-        return super.description() + "\tLevel: " + level + "\tExperience: " + experience + '/' + (level * REQ_EXP);
     }
 
     @Override

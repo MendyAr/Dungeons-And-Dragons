@@ -15,12 +15,12 @@ abstract public class Enemy extends Unit{
 
     //methods
 
-    public String getExperience(){
+    public String getExperienceValueString(){
         return String.format("Experience Value: %d", getExperienceValue());
     }
 
     public String description(){
-        return String.format("%s\t%s", super.description(), getExperience());
+        return String.format("%s\t%s", super.description(), getExperienceValueString());
     }
 
     public Integer getExperienceValue(){

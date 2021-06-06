@@ -24,7 +24,7 @@ public class Mage extends Player {
     public Mage(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, List<Enemy> enemies, Integer manaPool, Integer manaCost, Integer spellPower, Integer hitsCount, Integer abilityRange) {
         super(name, healthPool, attackPoints, defensePoints, abilityName, enemies);
         this.manaPool = manaPool;
-        this.currentMana = manaPool/4;
+        this.currentMana = manaPool / 4;
         this.manaCost = manaCost;
         this.spellPower = spellPower;
         this.hitsCount = hitsCount;
@@ -33,19 +33,23 @@ public class Mage extends Player {
 
     // getters & setters
 
-    public Integer getManaPool(){
-            return manaPool;
-        }
+    public Integer getManaPool() {
+        return manaPool;
+    }
 
-    public Integer getCurrentMana(){
+    public Integer getCurrentMana() {
         return currentMana;
     }
 
-    public Integer getSpellPower(){ return spellPower;}
+    public Integer getSpellPower() {
+        return spellPower;
+    }
 
-    public Integer getManaCost(){ return manaCost;}
+    public Integer getManaCost() {
+        return manaCost;
+    }
 
-    protected void increaseManaPool(Integer increaseVal){
+    protected void increaseManaPool(Integer increaseVal) {
         manaPool = manaPool + increaseVal;
     }
 
@@ -72,46 +76,51 @@ public class Mage extends Player {
     @Override
     public void castAbility() {
 
-        if(getCurrentMana() < getManaCost()) {
-            msgCallback.call(getName() + " tried to cast " + abilityName + ", but missing " + (getManaCost()-getCurrentMana())  + " mana.");
+        if (getCurrentMana() < getManaCost()) {
+            msgCallback.call(getName() + " tried to cast " + abilityName + ", but missing " + (getManaCost() - getCurrentMana()) + " mana.");
             return;
         }
 
         msgCallback.call(getName() + " cast " + abilityName);
         // filter enemies in range
         List<Enemy> enemiesInRange = new ArrayList<>();
-        for (Enemy enemy: enemies) {
+        for (Enemy enemy : enemies) {
             if (Range(enemy) < abilityRange) {
                 enemiesInRange.add(enemy);
             }
         }
         int hits = 0;
         attackRoll = getSpellPower();
-        while(enemiesInRange.size() != 0 & hits < hitsCount) {
+        while (enemiesInRange.size() != 0 & hits < hitsCount) {
             // choose a random enemy
-            int randomEnemy = (int) ( Math.random() * enemiesInRange.size());
+            int randomEnemy = (int) (Math.random() * enemiesInRange.size());
             Enemy enemy = enemiesInRange.get(randomEnemy);
             // deal damage
             enemy.dealDamage(this);
             hits++;
-            if(enemy.health.getCurrentHP() == 0){
+            if (enemy.health.getCurrentHP() == 0) {
                 enemiesInRange.remove(enemy);
             }
         }
         decreaseMana(getManaCost());
     }
 
-    public void lvlUp(){
+    public void lvlUp() {
         super.lvlUp();
         increaseManaPool(MANA_POOL_BONUS * level);
-        regenerateMana((int)(getManaPool() * MANA_REGENERATION_BONUS));
+        regenerateMana((int) (getManaPool() * MANA_REGENERATION_BONUS));
         increaseSpellPower(SPELL_POWER_BONUS * level);
     }
 
-    public String description(){
-        return super.description() + "\tMana: " + getCurrentMana() + "/" + getManaPool() +  "\tSpell Power: " + getSpellPower();
+    public String getManaString(){
+        return String.format("Mana: %d/%d", getCurrentMana(), getManaPool());
     }
 
+    public String getSpellPowerString(){
+        return String.format("Spell Power: %d", getSpellPower());
+    }
+
+    public String description() {
+        return String.format("%s\t%s\t%s", super.description(), getManaString(), getSpellPowerString());
+    }
 }
-
-
