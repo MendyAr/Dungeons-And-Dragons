@@ -17,8 +17,8 @@ public class Rogue extends Player {
 
     // constructor
 
-    public Rogue(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, List<Enemy> enemies, Integer abilityCost) {
-        super(name, healthPool, attackPoints, defensePoints, abilityName, enemies);
+    public Rogue(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, Integer abilityCost) {
+        super(name, healthPool, attackPoints, defensePoints);
         this.energy = energyPool;
         this.abilityCost = abilityCost;
     }
@@ -69,7 +69,7 @@ public class Rogue extends Player {
         // filter enemies in range
         List<Enemy> enemiesInRange = new ArrayList<>();
         for (Enemy enemy : enemies) {
-            if (Range(enemy) < 2) {
+            if (range(enemy) < 2) {
                 enemiesInRange.add(enemy);
             }
         }

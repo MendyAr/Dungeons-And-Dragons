@@ -3,6 +3,8 @@ package BusinessLayer;
 import CallBacks.MessageCallback;
 import CallBacks.MoveCallback;
 import CallBacks.OnDeathCallback;
+import util.InputProvider;
+import util.RandomNumberGenerator;
 
 import java.util.List;
 
@@ -20,6 +22,8 @@ abstract public class Unit extends Tile{
     protected OnDeathCallback deathCallback;
     protected MessageCallback msgCallback;
     protected MoveCallback moveCallback;
+    protected RandomNumberGenerator rng;
+    protected InputProvider inputProvider = InputProvider.getInputProvider();
 
     //constructor
 
@@ -37,11 +41,12 @@ abstract public class Unit extends Tile{
         this.enemies = enemies;
     }
 
-    public void init(Position position, List<Unit> enemies, OnDeathCallback deathCallback, MessageCallback msgCallback, MoveCallback moveCallback){
+    public void init(Position position, List<Unit> enemies, OnDeathCallback deathCallback, MessageCallback msgCallback, MoveCallback moveCallback, RandomNumberGenerator rng){
         init(position, enemies);
         this.deathCallback = deathCallback;
         this.msgCallback = msgCallback;
         this.moveCallback = moveCallback;
+        this.rng = rng;
     }
 
     public String getName() {
@@ -71,12 +76,12 @@ abstract public class Unit extends Tile{
     }
 
     protected void attack() {
-        attackRoll = (int)(Math.random() * (attackPoints + 1));
+        attackRoll = rng.generate(0, attackPoints);
         msgCallback.call(String.format("%s rolled %d attack points.", getName(), attackRoll));
     }
 
     protected void defend(){
-        defenseRoll= (int)(Math.random() * (defensePoints + 1));
+        defenseRoll= rng.generate(0, defensePoints);
         msgCallback.call(String.format("%s rolled %d defense points.", getName(), defenseRoll));
     }
 
@@ -133,7 +138,29 @@ abstract public class Unit extends Tile{
         moveCallback.move(new Position(position.getPositionX(), position.positionY+1));
     }
 
-    public void DoNothing(){}
+    public void doNothing(){}
+
+    public void randomAction(){
+        Integer random = rng.generate(0, 4);
+        switch (random){
+            case 0:
+                doNothing();
+                break;
+            case 1:
+                moveUp();
+                break;
+            case 2:
+                moveLeft();
+                break;
+            case 3:
+                moveDown();
+                break;
+            case 4:
+                moveRight();
+                break;
+        }
+    }
+
     public abstract void turn();
     public abstract void onKill(Unit killer);
     public abstract void onEnemyKill(Enemy kill);

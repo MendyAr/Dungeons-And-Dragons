@@ -12,7 +12,7 @@ abstract public class Player extends Unit{
     protected static final int ATTACK_BONUS = 4;
     protected static final int DEFENSE_BONUS = 1;
 
-    protected final String abilityName;
+    protected final String abilityName = null;
     protected Integer level;
     protected Integer experience;
     protected List<Enemy> enemies;
@@ -20,9 +20,8 @@ abstract public class Player extends Unit{
 
     //constructors
 
-    public Player(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, String abilityName, List<Enemy> enemies) {
+    public Player(String name, Integer healthPool, Integer attackPoints, Integer defensePoints) {
         super(playerTile, name, healthPool, attackPoints, defensePoints);
-        this.abilityName = abilityName;
         this.enemies = enemies;
         level = 1;
         experience = 0;
@@ -35,7 +34,7 @@ abstract public class Player extends Unit{
         getAction();
     }
 
-    public String getAction(){ return inputProvider.getAction(); }
+    public void getAction(){ inputProvider.getAction(this); }
 
     @Override
     public void interact(Unit unit) {

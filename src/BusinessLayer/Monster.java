@@ -44,7 +44,7 @@ public class Monster extends Enemy{
                 }
             }
         } else {
-            //randomAction
+            randomAction();
         }
     }
 

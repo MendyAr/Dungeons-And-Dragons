@@ -16,8 +16,8 @@ public class Warrior extends Player {
 
     // constructor
 
-    public Warrior(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, List<Enemy> enemies, Integer abilityCooldown) {
-        super(name, healthPool, attackPoints, defensePoints, abilityName, enemies);
+    public Warrior(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, Integer abilityCooldown) {
+        super(name, healthPool, attackPoints, defensePoints);
         this.abilityCooldown = abilityCooldown;
         this.remainingCooldown = 0;
     }
@@ -60,7 +60,7 @@ public class Warrior extends Player {
         // filter enemies in range
         List<Enemy> enemiesInRange = new ArrayList<>();
         for (Enemy enemy : enemies) {
-            if (Range(enemy) < 3) {
+            if (range(enemy) < 3) {
                 enemiesInRange.add(enemy);
             }
         }

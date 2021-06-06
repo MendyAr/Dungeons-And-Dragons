@@ -21,8 +21,8 @@ public class Mage extends Player {
 
     // constructor
 
-    public Mage(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, List<Enemy> enemies, Integer manaPool, Integer manaCost, Integer spellPower, Integer hitsCount, Integer abilityRange) {
-        super(name, healthPool, attackPoints, defensePoints, abilityName, enemies);
+    public Mage(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, Integer manaPool, Integer manaCost, Integer spellPower, Integer hitsCount, Integer abilityRange) {
+        super(name, healthPool, attackPoints, defensePoints);
         this.manaPool = manaPool;
         this.currentMana = manaPool / 4;
         this.manaCost = manaCost;
@@ -85,7 +85,7 @@ public class Mage extends Player {
         // filter enemies in range
         List<Enemy> enemiesInRange = new ArrayList<>();
         for (Enemy enemy : enemies) {
-            if (Range(enemy) < abilityRange) {
+            if (range(enemy) < abilityRange) {
                 enemiesInRange.add(enemy);
             }
         }
