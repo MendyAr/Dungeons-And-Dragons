@@ -7,24 +7,21 @@ import util.TrueRNG;
 
 import java.io.*;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class BoardInitializer {
 
-    private static String PLAYER_OPTIONS = "Select player:\n" +
-            "1. Jon Snow             Health: 300/300         Attack: 30              Defense: 4              Level: 1                Experience: 0/50                Cooldown: 0/3\n" +
-            "2. The Hound            Health: 400/400         Attack: 20              Defense: 6              Level: 1                Experience: 0/50                Cooldown: 0/5\n" +
-            "3. Melisandre           Health: 100/100         Attack: 5               Defense: 1              Level: 1                Experience: 0/50                Mana: 75/300            Spell Power: 15\n" +
-            "4. Thoros of Myr                Health: 250/250         Attack: 25              Defense: 4              Level: 1                Experience: 0/50                Mana: 37/150            Spell Power: 20\n" +
-            "5. Arya Stark           Health: 150/150         Attack: 40              Defense: 2              Level: 1                Experience: 0/50                Energy: 100/100\n" +
-            "6. Bronn                Health: 250/250         Attack: 35              Defense: 3              Level: 1                Experience: 0/50                Energy: 100/100\n" +
-            "7. Ygritte              Health: 220/220         Attack: 30              Defense: 2              Level: 1                Experience: 0/50                Arrows: 10              Range: 6";
-    private static Map<Character, Supplier<Enemy>> enemyFactory;
+    private static Scanner reader = new Scanner(System.in);
 
     //fields
     private final Board board;
     private final Iterator<File> levelsFiles;
     private final MessageCallback messageCallback;
+
+    private final Map<Character, Supplier<Enemy>> enemyFactory;
+    private final List<Supplier<Player>> playerFactory;
+
     private List<Tile> tiles;
     private List<Player> players;
     private List<Enemy> enemies;
@@ -40,11 +37,14 @@ public class BoardInitializer {
         if (listOfLevels.isEmpty())
             throw new IOException("Levels directory has no level files");
         listOfLevels.sort(new LevelsComparator());
-
+        checkLevelsLegality(listOfLevels);
 
         this.levelsFiles = listOfLevels.iterator();
         this.messageCallback = messageCallback;
+        this.enemyFactory = createEnemeyFactory();
+        this.playerFactory = createPlayerFactory();
     }
+
 
     public boolean buildNext() throws IOException {
         if (!levelsFiles.hasNext())
@@ -95,7 +95,7 @@ public class BoardInitializer {
         int numOfPlayers = 1;
         /*
         messageCallback.call("How many players?");
-        numOfPlayers = new Scanner(System.in).nextInt();
+        numOfPlayers = reader.nextInt();
          */ //for multiplayer option
         players = new ArrayList<>(numOfPlayers);
         for (; numOfPlayers>0; numOfPlayers--){
@@ -104,7 +104,42 @@ public class BoardInitializer {
     }
 
     private Player getPlayer(){
-        messageCallback.call(PLAYER_OPTIONS);
-        return new Warrior("Dimi Demo", 300, 5, 4, 3);
+        messageCallback.call("Select Player: ");
+        Iterator<String> possiblePlayers = playerFactory.stream().map(Supplier::get).map(Player::description).iterator();
+        for (int i = 1; possiblePlayers.hasNext(); i++)
+            messageCallback.call(String.format("%d. %s", i, possiblePlayers.next()));
+        Integer input = null;
+        while (input == null){
+            try {
+                input = Integer.valueOf(reader.next().trim());
+                if (input < 1 || input > playerFactory.size())
+                    input = null;
+            }
+            catch (Exception ignored) {
+            }
+        }
+        return playerFactory.get(input-1).get();
+    }
+
+    private void checkLevelsLegality(List<File> listOfLevels) throws IOException {
+        List<String> levelNames = listOfLevels.stream().map(File::getName).collect(Collectors.toList());
+        for (int i = 1; i <= levelNames.size(); i++) {
+            if (!levelNames.contains(String.format("level%d.txt", i)))
+                throw new IOException(String.format("'level%d.txt missing in a group of %d levels", i, levelNames.size()));
+        }
+    }
+
+    private Map<Character, Supplier<Enemy>> createEnemeyFactory(){
+        List<Supplier<Enemy>> enemyList = Arrays.asList(
+                () -> new Monster('s', "Lannister Solider", 80, 8, 3, 25, 3)
+        );
+        return enemyList.stream().collect(Collectors.toMap(s -> s.get().getTileChar(), Function.identity()));
+    }
+
+    private List<Supplier<Player>> createPlayerFactory(){
+        List<Supplier<Player>> playerList = Arrays.asList(
+                () -> new Warrior("Jon Snow", 300, 30, 4, 3)
+        );
+        return playerList;
     }
 }
