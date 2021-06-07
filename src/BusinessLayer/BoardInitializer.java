@@ -27,7 +27,7 @@ public class BoardInitializer {
     private List<Enemy> enemies;
 
     //constructor
-    public BoardInitializer(Board board, String levelsDirName, MessageCallback messageCallback) throws IOException {
+    public BoardInitializer(Board board, String levelsDirName, MessageCallback messageCallback) {
         this.board = board;
         File levelsDir = new File(levelsDirName);
         if (!levelsDir.exists())
@@ -46,7 +46,7 @@ public class BoardInitializer {
     }
 
 
-    public boolean buildNext() throws IOException {
+    public boolean buildNext() {
         if (!levelsFiles.hasNext())
             return false;
         tiles = new ArrayList<>();
@@ -121,7 +121,7 @@ public class BoardInitializer {
         return playerFactory.get(input-1).get();
     }
 
-    private void checkLevelsLegality(List<File> listOfLevels) throws IOException {
+    private void checkLevelsLegality(List<File> listOfLevels) {
         List<String> levelNames = listOfLevels.stream().map(File::getName).collect(Collectors.toList());
         for (int i = 1; i <= levelNames.size(); i++) {
             if (!levelNames.contains(String.format("level%d.txt", i)))
