@@ -1,25 +1,32 @@
 package BusinessLayer;
 
-import CallBacks.GameOverCallback;
+import CallBacks.LevelOverCallback;
+import CallBacks.MessageCallback;
 import util.TileComparator;
 
 import java.util.List;
+import java.util.Optional;
 
 public class Board {
 
     //fields
 
-    private List<Player> player;
+    private List<Player> players;
     private List<Enemy> enemies;
     private List<Tile> board;
     private TileComparator tileComparator = new TileComparator();
-    private GameOverCallback gameOverCallback;
+    private MessageCallback messageCallback;
+    private LevelOverCallback levelOverCallback;
 
-    public void init (List<Player> player, List<Enemy> enemies, List<Tile> board, GameOverCallback gameOverCallback){
-        this.player = player;
+    public Board(MessageCallback messageCallback, LevelOverCallback levelOverCallback){
+        this.messageCallback = messageCallback;
+        this.levelOverCallback = levelOverCallback;
+    }
+
+    public void init (List<Player> players, List<Enemy> enemies, List<Tile> board){
+        this.players = players;
         this.enemies = enemies;
         this.board = board;
-        this.gameOverCallback = gameOverCallback;
     }
 
     public void init(List<Enemy> enemies, List<Tile> board){
@@ -36,5 +43,23 @@ public class Board {
             str += tile;
         }
         return str.substring(1);
+    }
+
+    public void move(Unit unit, Position position) {
+        Optional<Tile> oT = board.stream().filter(t -> t.position.equals(position)).findFirst();
+        if (oT.isPresent())
+            oT.get().interact(unit);
+    }
+
+    public void onPlayerDeath(Player player){
+        players.remove(player);
+        if (players.isEmpty())
+            levelOverCallback.levelOver(false);
+    }
+
+    public void onEnemyDeath(Enemy enemy){
+        enemies.remove(enemy);
+        if (enemies.isEmpty())
+            levelOverCallback.levelOver(true);
     }
 }
