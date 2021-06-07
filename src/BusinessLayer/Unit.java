@@ -18,7 +18,7 @@ abstract public class Unit extends Tile{
     protected Integer attackRoll;
     protected Integer defensePoints;
     protected Integer defenseRoll;
-    protected List<Unit> enemies;
+    protected List<? extends Unit> enemies;
     protected OnDeathCallback deathCallback;
     protected MessageCallback msgCallback;
     protected MoveCallback moveCallback;
@@ -36,12 +36,12 @@ abstract public class Unit extends Tile{
     }
 
     //initializers
-    public void init(Position position, List<Unit> enemies){
+    public void init(Position position, List<? extends Unit> enemies){
         super.init(position);
         this.enemies = enemies;
     }
 
-    public void init(Position position, List<Unit> enemies, OnDeathCallback deathCallback, MessageCallback msgCallback, MoveCallback moveCallback, RandomNumberGenerator rng){
+    public void init(Position position, List<? extends Unit> enemies, OnDeathCallback deathCallback, MessageCallback msgCallback, MoveCallback moveCallback, RandomNumberGenerator rng){
         init(position, enemies);
         this.deathCallback = deathCallback;
         this.msgCallback = msgCallback;
@@ -105,10 +105,6 @@ abstract public class Unit extends Tile{
         attack();
         defender.defend();
         defender.dealDamage(this);
-    }
-
-    public void accept(Tile tile){
-        tile.interact(this);
     }
 
     public void visited(Empty empty) {

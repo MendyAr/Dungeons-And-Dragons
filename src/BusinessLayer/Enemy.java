@@ -47,7 +47,7 @@ abstract public class Enemy extends Unit{
         deathCallback.death();
     }
 
-    protected Unit findClosestTarget(List<Unit> targets){
+    protected Unit findClosestTarget(List<? extends Unit> targets){
         Unit closest = targets.get(0);
         Double minRange = range(closest);
         for (Unit target: targets){

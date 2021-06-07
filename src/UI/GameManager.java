@@ -6,5 +6,12 @@ public class GameManager {
 
     //constructor
 
+
     //methods
+
+    public void printMessage
+
+    public static void main(String[] args) {
+
+    }
 }
