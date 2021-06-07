@@ -25,8 +25,7 @@ public class Board {
 
     public void init (List<Player> players, List<Enemy> enemies, List<Tile> board){
         this.players = players;
-        this.enemies = enemies;
-        this.board = board;
+        init(enemies, board);
     }
 
     public void init(List<Enemy> enemies, List<Tile> board){
