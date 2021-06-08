@@ -16,6 +16,8 @@ public class GameManager {
     }
 
     public void startGame(){
+        if (board == null)
+            throw new NullPointerException("Initialize the game before starting the game");
         board.play();
     }
 
@@ -36,12 +38,14 @@ public class GameManager {
 
     private void gameWon(){
         printMessage("You won!");
+        System.exit(0);
     }
 
     private void gameOver(){
         printMessage("You Lost!");
         printMessage(board.toString());
         printMessage("Game Over.");
+        System.exit(0);
     }
 
     public static void main(String[] args) {
