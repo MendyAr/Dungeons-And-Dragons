@@ -36,6 +36,7 @@ public class BoardInitializer {
     //constructor
     public BoardInitializer(Board board, String levelsDirName, MessageCallback messageCallback) {
         this.board = board;
+        //arranging the levels files
         File levelsDir = new File(levelsDirName);
         if (!levelsDir.exists())
             throw new IllegalArgumentException("Invalid directory given");
@@ -52,7 +53,7 @@ public class BoardInitializer {
         this.playerFactory = createPlayerFactory();
     }
 
-
+    //building the next level and initialize the board based on the level .txt file
     public boolean buildNext() {
         if (!levelsFiles.hasNext())
             return false;
@@ -130,6 +131,7 @@ public class BoardInitializer {
         }
     }
 
+    // let the user choose his player
     private Player getPlayer(){
         messageCallback.call("Select Player: ");
         Iterator<String> possiblePlayers = playerFactory.stream().map(Supplier::get).map(Player::description).iterator();

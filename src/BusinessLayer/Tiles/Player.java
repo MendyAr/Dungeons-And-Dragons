@@ -55,14 +55,6 @@ abstract public class Player extends Unit{
         empty.setPosition(tmp);
     }
 
-    protected String getLevelString(){
-       return String.format("Level: %d",level);
-    }
-
-    protected String getExperienceString(){
-        return String.format("Experience: %d/%d", experience, (level * REQ_EXP));
-    }
-
     protected void addExperience(Integer value){
         experience += value;
         msgCallback.call(getName() + " gained " + value + " experience.");
@@ -77,10 +69,6 @@ abstract public class Player extends Unit{
         health.increasePool(HEALTH_BONUS * level);
         increaseAtt(ATTACK_BONUS * level);
         increaseDef(DEFENSE_BONUS * level);
-    }
-
-    public String description(){
-        return String.format("%s\t%s\t%s", super.description(), getLevelString() ,getExperienceString());
     }
 
     @Override
@@ -104,6 +92,19 @@ abstract public class Player extends Unit{
 
     public void onDeath() {
         deathCallback.death();
+    }
+
+
+    public String description(){
+        return String.format("%s\t%s\t%s", super.description(), getLevelString() ,getExperienceString());
+    }
+
+    protected String getLevelString(){
+        return String.format("Level: %d",level);
+    }
+
+    protected String getExperienceString(){
+        return String.format("Experience: %d/%d", experience, (level * REQ_EXP));
     }
 
     @Override

@@ -13,20 +13,17 @@ abstract public class Enemy extends Unit{
         this.experienceValue = experienceValue;
     }
 
-    //methods
+    // getters
 
     public String getExperienceValueString(){
         return String.format("Experience Value: %d", getExperienceValue());
-    }
-
-    public String description(){
-        return String.format("%s\t%s", super.description(), getExperienceValueString());
     }
 
     public Integer getExperienceValue(){
         return experienceValue;
     }
 
+    //methods
     @Override
     public void onKill(Unit killer) {
         killer.onEnemyKill(this);
@@ -69,5 +66,8 @@ abstract public class Enemy extends Unit{
         combat(player);
     }
 
+    public String description(){
+        return String.format("%s\t%s", super.description(), getExperienceValueString());
+    }
 
 }

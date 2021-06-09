@@ -53,7 +53,7 @@ public class Mage extends Player {
     }
 
     protected void increaseManaPool(Integer increaseVal) {
-        manaPool = manaPool + increaseVal;
+        manaPool += increaseVal;
     }
 
     protected void regenerateMana(Integer regenerationVal) {
@@ -65,7 +65,7 @@ public class Mage extends Player {
     }
 
     protected void increaseSpellPower(Integer IncreaseVal) {
-        spellPower = spellPower + IncreaseVal;
+        spellPower +=  IncreaseVal;
     }
 
     // methods

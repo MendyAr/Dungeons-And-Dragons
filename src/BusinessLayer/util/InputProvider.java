@@ -5,7 +5,7 @@ import BusinessLayer.Tiles.Player;
 import java.util.Scanner;
 
 public class InputProvider {
-
+    Object o = InputProvider.inputProvider;
     private static InputProvider inputProvider = null;
     private static final Scanner reader = new Scanner(System.in);
 
