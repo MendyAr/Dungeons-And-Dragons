@@ -11,12 +11,12 @@ public class Board {
 
     //fields
 
+    private final TileComparator tileComparator = new TileComparator();
+    private final MessageCallback messageCallback;
+    private final LevelOverCallback levelOverCallback;
     private List<Player> players;
     private List<Enemy> enemies;
     private List<Tile> board;
-    private TileComparator tileComparator = new TileComparator();
-    private MessageCallback messageCallback;
-    private LevelOverCallback levelOverCallback;
 
     public Board(MessageCallback messageCallback, LevelOverCallback levelOverCallback){
         this.messageCallback = messageCallback;
@@ -25,10 +25,6 @@ public class Board {
 
     public void init (List<Player> players, List<Enemy> enemies, List<Tile> board){
         this.players = players;
-        init(enemies, board);
-    }
-
-    public void init(List<Enemy> enemies, List<Tile> board){
         this.enemies = enemies;
         this.board = board;
     }
@@ -36,6 +32,7 @@ public class Board {
     public void play(){
         while (!enemies.isEmpty() && players.isEmpty()){
             for (Player player: players){
+                messageCallback.call(toString());
                 player.turn();
             }
             for (Enemy enemy: enemies){
@@ -72,10 +69,18 @@ public class Board {
         players.remove(player);
         if (players.isEmpty())
             levelOverCallback.levelOver(false);
+        board.remove(player);
+        Empty replacement = new Empty();
+        replacement.init(player.getPosition());
+        board.add(replacement);
     }
 
     public void onEnemyDeath(Enemy enemy){
         enemies.remove(enemy);
+        board.remove(enemy);
+        Empty replacement = new Empty();
+        replacement.init(enemy.getPosition());
+        board.add(replacement);
         if (enemies.isEmpty())
             levelOverCallback.levelOver(true);
     }
