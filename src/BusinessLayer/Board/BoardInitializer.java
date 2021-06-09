@@ -1,9 +1,15 @@
-package BusinessLayer;
+package BusinessLayer.Board;
 
-import CallBacks.MessageCallback;
-import util.LevelsComparator;
-import util.Supplier;
-import util.TrueRNG;
+import BusinessLayer.Tiles.*;
+import BusinessLayer.Tiles.Classes.Mage;
+import BusinessLayer.Tiles.Classes.Rogue;
+import BusinessLayer.Tiles.Classes.Warrior;
+import BusinessLayer.Tiles.Enemies.Monster;
+import BusinessLayer.Tiles.Enemies.Trap;
+import BusinessLayer.CallBacks.MessageCallback;
+import BusinessLayer.util.LevelsComparator;
+import BusinessLayer.util.Supplier;
+import BusinessLayer.util.TrueRNG;
 
 import java.io.*;
 import java.util.*;

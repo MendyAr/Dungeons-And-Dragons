@@ -1,4 +1,4 @@
-package util;
+package BusinessLayer.util;
 
 public class TrueRNG implements RandomNumberGenerator{
     private static RandomNumberGenerator rng;

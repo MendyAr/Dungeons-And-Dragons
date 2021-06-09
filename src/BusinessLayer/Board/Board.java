@@ -1,8 +1,9 @@
-package BusinessLayer;
+package BusinessLayer.Board;
 
-import CallBacks.LevelOverCallback;
-import CallBacks.MessageCallback;
-import util.TileComparator;
+import BusinessLayer.Tiles.*;
+import BusinessLayer.CallBacks.LevelOverCallback;
+import BusinessLayer.CallBacks.MessageCallback;
+import BusinessLayer.util.TileComparator;
 
 import java.util.List;
 import java.util.Optional;

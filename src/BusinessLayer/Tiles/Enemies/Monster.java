@@ -1,8 +1,9 @@
-package BusinessLayer;
+package BusinessLayer.Tiles.Enemies;
 
-import java.util.List;
+import BusinessLayer.Tiles.Enemy;
+import BusinessLayer.Tiles.Unit;
 
-public class Monster extends Enemy{
+public class Monster extends Enemy {
 
     //fields
     protected Integer visionRange;

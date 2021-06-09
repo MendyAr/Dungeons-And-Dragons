@@ -1,10 +1,10 @@
-package BusinessLayer;
+package BusinessLayer.Tiles;
 
-import CallBacks.MessageCallback;
-import CallBacks.MoveCallback;
-import CallBacks.OnDeathCallback;
-import util.InputProvider;
-import util.RandomNumberGenerator;
+import BusinessLayer.CallBacks.MessageCallback;
+import BusinessLayer.CallBacks.MoveCallback;
+import BusinessLayer.CallBacks.OnDeathCallback;
+import BusinessLayer.util.InputProvider;
+import BusinessLayer.util.RandomNumberGenerator;
 
 import java.util.List;
 
@@ -49,8 +49,13 @@ abstract public class Unit extends Tile{
         this.rng = rng;
     }
 
+    //getters
     public String getName() {
         return name;
+    }
+
+    public Health getHealth() {
+        return health;
     }
 
     public String getAttackString() {
@@ -62,34 +67,33 @@ abstract public class Unit extends Tile{
     }
 
     //methods
-
     public String description() {
         return String.format("%s\t\t%s\t%s\t%s", getName(), health.toString(), getAttackString(), getDefenseString());
     }
 
-    protected void increaseAtt(Integer value){
+    public void increaseAtt(Integer value){
         attackPoints += value;
     }
 
-    protected void increaseDef(Integer value){
+    public void increaseDef(Integer value){
         defensePoints += value;
     }
 
-    protected void attack() {
+    public void attack() {
         attackRoll = rng.generate(0, attackPoints);
         msgCallback.call(String.format("%s rolled %d attack points.", getName(), attackRoll));
     }
 
-    protected void defend(){
+    public void defend(){
         defenseRoll= rng.generate(0, defensePoints);
         msgCallback.call(String.format("%s rolled %d defense points.", getName(), defenseRoll));
     }
 
-    protected Integer calcDMG(Integer att, Integer def){
+    public Integer calcDMG(Integer att, Integer def){
         return Math.max(att-def, 0);
     }
 
-    protected void dealDamage(Unit attacker){
+    public void dealDamage(Unit attacker){
         Integer damage = calcDMG(attacker.attackRoll, defenseRoll);
         msgCallback.call(String.format("%s dealt %d damage to %s.", attacker.getName(), damage, getName()));
         if (health.subHP(damage)){

@@ -1,4 +1,7 @@
-package BusinessLayer;
+package BusinessLayer.Tiles.Classes;
+
+import BusinessLayer.Tiles.Enemy;
+import BusinessLayer.Tiles.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +101,7 @@ public class Mage extends Player {
             // deal damage
             enemy.dealDamage(this);
             hits++;
-            if (enemy.health.getCurrentHP() == 0) {
+            if (enemy.getHealth().getCurrentHP() == 0) {
                 enemiesInRange.remove(enemy);
             }
         }

@@ -1,5 +1,5 @@
-package util;
-import BusinessLayer.Tile;
+package BusinessLayer.util;
+import BusinessLayer.Tiles.Tile;
 
 import java.util.Comparator;
 

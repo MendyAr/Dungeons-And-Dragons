@@ -1,6 +1,6 @@
-package util;
+package BusinessLayer.util;
 
-import BusinessLayer.Player;
+import BusinessLayer.Tiles.Player;
 
 import java.util.Scanner;
 

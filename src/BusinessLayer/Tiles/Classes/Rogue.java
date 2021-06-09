@@ -1,4 +1,7 @@
-package BusinessLayer;
+package BusinessLayer.Tiles.Classes;
+import BusinessLayer.Tiles.Enemy;
+import BusinessLayer.Tiles.Player;
+
 import java.util.ArrayList;
 import java.util.List;
 

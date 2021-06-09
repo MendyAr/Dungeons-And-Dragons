@@ -1,8 +1,10 @@
-package BusinessLayer;
+package BusinessLayer.Tiles.Enemies;
 
-import java.util.List;
+import BusinessLayer.Tiles.Enemy;
+import BusinessLayer.Tiles.Player;
+import BusinessLayer.Tiles.Unit;
 
-public class Trap extends Enemy{
+public class Trap extends Enemy {
 
     //fields
     private Integer visibilityTime;

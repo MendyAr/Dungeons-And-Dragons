@@ -1,4 +1,4 @@
-package util;
+package BusinessLayer.util;
 
 public class DeterministicRNG implements RandomNumberGenerator{
     public static int result;

@@ -1,4 +1,4 @@
-package BusinessLayer;
+package BusinessLayer.Tiles;
 
 public class Health {
     //fields

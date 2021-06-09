@@ -1,10 +1,10 @@
-package BusinessLayer;
+package BusinessLayer.Tiles;
 
-public class Empty extends Tile{
+public class Wall extends Tile{
 
     //constructors
-    public Empty(){
-        super('.');
+    public Wall(){
+        super('#');
     }
 
     @Override

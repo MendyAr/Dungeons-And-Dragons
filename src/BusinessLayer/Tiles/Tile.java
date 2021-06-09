@@ -1,4 +1,4 @@
-package BusinessLayer;
+package BusinessLayer.Tiles;
 
 abstract public class Tile {
 
