@@ -103,7 +103,6 @@ abstract public class Player extends Unit{
     }
 
     public void onDeath() {
-        msgCallback.call("You lost, Looser!");
         deathCallback.death();
     }
 
