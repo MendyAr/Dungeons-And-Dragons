@@ -1,7 +1,7 @@
 package BusinessLayer.util;
 
 public class TrueRNG implements RandomNumberGenerator{
-    private static RandomNumberGenerator rng;
+    private static RandomNumberGenerator rng = null;
 
     @Override
     public Integer generate(int lowBound, int highBound) {

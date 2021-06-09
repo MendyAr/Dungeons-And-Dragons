@@ -1,6 +1,6 @@
 package BusinessLayer.CallBacks;
 
-import BusinessLayer.Tiles.Position;
+import BusinessLayer.util.Position;
 
 public interface MoveCallback {
     void move(Position position);

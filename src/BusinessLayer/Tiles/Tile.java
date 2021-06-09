@@ -1,5 +1,7 @@
 package BusinessLayer.Tiles;
 
+import BusinessLayer.util.Position;
+
 abstract public class Tile {
 
     //fields
@@ -42,7 +44,6 @@ abstract public class Tile {
     public double range(Tile tile){
         if(tile == null)
             throw new NullPointerException("Trying to check range to a null tile");
-
         return this.position.range(tile.position);
     }
 

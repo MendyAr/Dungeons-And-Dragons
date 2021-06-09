@@ -1,5 +1,7 @@
 package BusinessLayer.Tiles;
 
+import BusinessLayer.util.Position;
+
 import java.util.List;
 
 abstract public class Player extends Unit{

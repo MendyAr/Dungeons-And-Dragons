@@ -1,4 +1,4 @@
-package BusinessLayer.Tiles;
+package BusinessLayer.util;
 
 public class Position implements Comparable<Position>{
 

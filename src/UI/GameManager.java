@@ -18,6 +18,7 @@ public class GameManager {
     public void startGame(){
         if (board == null)
             throw new NullPointerException("Initialize the game before starting the game");
+        boardInitializer.buildNext();
         board.play();
     }
 

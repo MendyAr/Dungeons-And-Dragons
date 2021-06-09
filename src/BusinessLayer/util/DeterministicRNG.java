@@ -1,11 +1,11 @@
 package BusinessLayer.util;
 
 public class DeterministicRNG implements RandomNumberGenerator{
-    public static int result;
+    private static int result;
     private static RandomNumberGenerator rng;
 
     private DeterministicRNG(int result){
-        this.result = result;
+        DeterministicRNG.result = result;
     }
 
     @Override
@@ -13,7 +13,7 @@ public class DeterministicRNG implements RandomNumberGenerator{
         return result;
     }
 
-    public static RandomNumberGenerator getInstance() {
+    public static RandomNumberGenerator getInstance(int result) {
         if (rng == null)
             rng = new DeterministicRNG(result);
         return rng;

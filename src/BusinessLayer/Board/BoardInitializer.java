@@ -8,6 +8,7 @@ import BusinessLayer.Tiles.Enemies.Monster;
 import BusinessLayer.Tiles.Enemies.Trap;
 import BusinessLayer.CallBacks.MessageCallback;
 import BusinessLayer.util.LevelsComparator;
+import BusinessLayer.util.Position;
 import BusinessLayer.util.Supplier;
 import BusinessLayer.util.TrueRNG;
 
@@ -94,6 +95,7 @@ public class BoardInitializer {
                     case '@':
                         for (Player player: players){
                             player.init(position, enemies, () -> board.onPlayerDeath(player), messageCallback, (pos) -> board.move(player, pos), TrueRNG.getInstance());
+                            tiles.add(player);
                         }
                         break;
                     default:
@@ -101,6 +103,7 @@ public class BoardInitializer {
                             throw new IllegalArgumentException(String.format("Level %s has illegal character: '%c'", level.getName(), tileChar));
                         tile = enemyFactory.get(tileChar).get();
                         ((Enemy)tile).init(position, players, () -> board.onEnemyDeath((Enemy) tile), messageCallback, (pos) -> board.move((Enemy) tile, pos), TrueRNG.getInstance());
+                        tiles.add(tile);
                         break;
                 }
             }

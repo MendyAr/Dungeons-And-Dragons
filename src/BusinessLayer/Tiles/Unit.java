@@ -3,7 +3,9 @@ package BusinessLayer.Tiles;
 import BusinessLayer.CallBacks.MessageCallback;
 import BusinessLayer.CallBacks.MoveCallback;
 import BusinessLayer.CallBacks.OnDeathCallback;
+import BusinessLayer.util.Health;
 import BusinessLayer.util.InputProvider;
+import BusinessLayer.util.Position;
 import BusinessLayer.util.RandomNumberGenerator;
 
 import java.util.List;
@@ -123,19 +125,19 @@ abstract public class Unit extends Tile{
     public abstract void visited(Player player);
 
     public void moveLeft(){
-        moveCallback.move(new Position(position.getPositionX()-1, position.positionY));
+        moveCallback.move(new Position(position.getPositionX()-1, position.getPositionY()));
     }
 
     public void moveUp(){
-        moveCallback.move(new Position(position.getPositionX(), position.positionY-1));
+        moveCallback.move(new Position(position.getPositionX(), position.getPositionY()-1));
     }
 
     public void moveRight(){
-        moveCallback.move(new Position(position.getPositionX()+1, position.positionY));
+        moveCallback.move(new Position(position.getPositionX()+1, position.getPositionY()));
     }
 
     public void moveDown(){
-        moveCallback.move(new Position(position.getPositionX(), position.positionY+1));
+        moveCallback.move(new Position(position.getPositionX(), position.getPositionY()+1));
     }
 
     public void doNothing(){}

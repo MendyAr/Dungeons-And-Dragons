@@ -3,6 +3,7 @@ package BusinessLayer.Board;
 import BusinessLayer.Tiles.*;
 import BusinessLayer.CallBacks.LevelOverCallback;
 import BusinessLayer.CallBacks.MessageCallback;
+import BusinessLayer.util.Position;
 import BusinessLayer.util.TileComparator;
 
 import java.util.List;
@@ -61,7 +62,7 @@ public class Board {
     }
 
     public void move(Unit unit, Position position) {
-        Optional<Tile> oT = board.stream().filter(t -> t.position.equals(position)).findFirst();
+        Optional<Tile> oT = board.stream().filter(t -> t.getPosition().equals(position)).findFirst();
         if (oT.isPresent())
             oT.get().interact(unit);
     }
