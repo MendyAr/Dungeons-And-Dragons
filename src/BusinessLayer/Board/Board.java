@@ -32,7 +32,7 @@ public class Board {
     }
 
     public void play(){
-        while (!enemies.isEmpty() && players.isEmpty()){
+        while (!enemies.isEmpty() && !players.isEmpty()){
             for (Player player: players){
                 messageCallback.call(toString());
                 player.turn();
@@ -61,6 +61,7 @@ public class Board {
         return str.substring(1);
     }
 
+    // interact a unit and a position given by it
     public void move(Unit unit, Position position) {
         Optional<Tile> oT = board.stream().filter(t -> t.getPosition().equals(position)).findFirst();
         if (oT.isPresent())
