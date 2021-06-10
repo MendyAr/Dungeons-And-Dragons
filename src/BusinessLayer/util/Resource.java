@@ -2,11 +2,13 @@ package BusinessLayer.util;
 
 public class Resource {
     //fields
+    private String name;
     private int pool;
     private int currAmount;
 
     //constructor
-    public Resource(int pool){
+    public Resource(String name, int pool){
+        this.name = name;
         this.pool = pool;
         init();
     }
@@ -46,6 +48,6 @@ public class Resource {
     }
 
     public String toString(){
-        return String.format("%d%c%d", currAmount, '/', pool);
+        return String.format("%s: %d%c%d", name, currAmount, '/', pool);
     }
 }

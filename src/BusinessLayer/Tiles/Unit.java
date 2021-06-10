@@ -28,7 +28,7 @@ abstract public class Unit extends Tile{
     public Unit(char tileChar, String name, Integer healthPool, Integer attackPoints, Integer defensePoints) {
         super(tileChar);
         this.name = name;
-        this.health = new Resource(healthPool);
+        this.health = new Resource("Health", healthPool);
         this.attackPoints = attackPoints;
         this.defensePoints = defensePoints;
     }
@@ -54,10 +54,6 @@ abstract public class Unit extends Tile{
 
     public Resource getHealth() {
         return health;
-    }
-
-    public String getHealthString(){
-        return "Health: " + health;
     }
 
     public String getAttackString() {
@@ -168,7 +164,7 @@ abstract public class Unit extends Tile{
     }
 
     public String description() {
-        return String.format("%s\t\t%s\t%s\t%s", getName(), getHealthString(), getAttackString(), getDefenseString());
+        return String.format("%s\t\t%s\t%s\t%s", getName(), health.toString(), getAttackString(), getDefenseString());
     }
 
     public abstract void turn();

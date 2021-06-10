@@ -2,6 +2,7 @@ package BusinessLayer.Tiles;
 
 import BusinessLayer.util.InputProvider;
 import BusinessLayer.util.Position;
+import BusinessLayer.util.Resource;
 
 import java.util.List;
 
@@ -15,25 +16,43 @@ abstract public class Player extends Unit {
     protected static final int ATTACK_BONUS = 4;
     protected static final int DEFENSE_BONUS = 1;
 
-    protected final String abilityName = null;
     protected Integer level;
     protected Integer experience;
-    //protected List<Enemy> enemies;
+    protected String abilityName;
+    protected Resource abilityResource;
+    protected boolean abilityUsed;
     protected InputProvider inputProvider = InputProvider.getInputProvider();
 
 
     //constructors
 
-    public Player(String name, Integer healthPool, Integer attackPoints, Integer defensePoints) {
+    public Player(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, String abilityName, Resource abilityResource) {
         super(playerTile, name, healthPool, attackPoints, defensePoints);
         level = 1;
         experience = 0;
+        this.abilityName = abilityName;
+        this.abilityResource = abilityResource;
+    }
+
+    //getters
+
+    public Resource getAbilityResource() {
+        return abilityResource;
+    }
+
+    protected String getLevelString() {
+        return String.format("Level: %d", level);
+    }
+
+    protected String getExperienceString() {
+        return String.format("Experience: %d/%d", experience, (level * REQ_EXP));
     }
 
     //methods
 
     @Override
     public void turn() {
+        abilityUsed = false;
         getAction();
     }
 
@@ -84,6 +103,8 @@ abstract public class Player extends Unit {
     @Override
     public void onEnemyKill(Enemy kill) {
         Integer experience = kill.getExperienceValue();
+        if (!abilityUsed)
+            swapPositions(kill);
         msgCallback.call(String.format("%s died. %s gained %d experience.", kill.getName(), getName(), experience));
         addExperience(experience);
     }
@@ -99,17 +120,8 @@ abstract public class Player extends Unit {
         deathCallback.death();
     }
 
-
     public String description() {
-        return String.format("%s\t%s\t%s", super.description(), getLevelString(), getExperienceString());
-    }
-
-    protected String getLevelString() {
-        return String.format("Level: %d", level);
-    }
-
-    protected String getExperienceString() {
-        return String.format("Experience: %d/%d", experience, (level * REQ_EXP));
+        return String.format("%s\t%s\t%s\t%s", super.description(), getLevelString(), getExperienceString(), abilityResource.toString());
     }
 
     @Override

@@ -11,48 +11,34 @@ public class Warrior extends Player {
     // fields
 
     protected static final String abilityName = "Avenger's Shield";
+    protected static final String abilityResourceName = "Cooldown";
     protected static final int W_HEALTH_BONUS = 5;
     protected static final int W_ATTACK_BONUS = 2;
     protected static final int W_DEFENSE_BONUS = 1;
 
-    private final Cooldown abilityCooldown;
-    private boolean usedAbility;
-
     // constructor
 
     public Warrior(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, Integer abilityCooldown) {
-        super(name, healthPool, attackPoints, defensePoints);
-        this.abilityCooldown = new Cooldown(abilityCooldown);
-    }
-
-    // getters & setters
-
-
-    public String getCooldownString() {
-        return String.format("Cooldown: %s", abilityCooldown.toString());
+        super(name, healthPool, attackPoints, defensePoints, abilityName, new Cooldown(abilityResourceName, abilityCooldown));
     }
 
     // methods
 
     @Override
     public void turn() {
-        usedAbility = false;
         super.turn();
-        if (!usedAbility)
-            abilityCooldown.tick();
+        if (!abilityUsed)
+            abilityResource.subAmount(1);
     }
 
     @Override
     public void castAbility() {
-
-        try {
-            abilityCooldown.use();
-        } catch (Exception e) {
-            msgCallback.call(String.format("%s tried to cast %s, but there is a cooldown: %s.", getName(), abilityName, e.getMessage()));
+        if (abilityResource.getCurrent() != 0) {
+            msgCallback.call(String.format("%s tried to cast %s, but there is a cooldown: %d.", getName(), abilityName, abilityResource.getCurrent()));
             return;
         }
 
-        usedAbility = true;
+        abilityUsed = true;
         msgCallback.call(getName() + " cast " + abilityName);
         // filter enemies in range
         List<Unit> enemiesInRange = enemies.stream().filter(e -> range(e) < 3).collect(Collectors.toList());
@@ -72,13 +58,9 @@ public class Warrior extends Player {
 
     public void lvlUp() {
         super.lvlUp();
-        abilityCooldown.init();
-        health.increasePool(W_HEALTH_BONUS * level);
+        getAbilityResource().init();
+        getHealth().increasePool(W_HEALTH_BONUS * level);
         increaseAtt(W_ATTACK_BONUS * level);
         increaseDef(W_DEFENSE_BONUS * level);
-    }
-
-    public String description() {
-        return String.format("%s\t%s", super.description(), getCooldownString());
     }
 }
