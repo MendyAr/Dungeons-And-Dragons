@@ -1,9 +1,8 @@
 package BusinessLayer.Tiles.Classes;
-import BusinessLayer.Tiles.Enemy;
 import BusinessLayer.Tiles.Player;
 import BusinessLayer.Tiles.Unit;
+import BusinessLayer.util.Resource;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,20 +16,20 @@ public class Rogue extends Player {
 
     private final Integer abilityCost;
 
-    private Integer energy;
+    private final Resource energy;
 
 
     // constructor
 
     public Rogue(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, Integer abilityCost) {
         super(name, healthPool, attackPoints, defensePoints);
-        this.energy = energyPool;
+        this.energy = new Resource(energyPool);
         this.abilityCost = abilityCost;
     }
 
     // getters & setters
 
-    public Integer getEnergy() {
+    public Resource getEnergy() {
         return energy;
     }
 
@@ -42,16 +41,8 @@ public class Rogue extends Player {
         return abilityCost;
     }
 
-    protected void increaseEnergy(Integer increaseVal) {
-        energy = Math.min(energy + increaseVal, energyPool);
-    }
-
-    protected void decreaseEnergy(Integer decreaseVal) {
-        energy = Math.max(energy - decreaseVal, 0);
-    }
-
-    protected void resetEnergy() {
-        energy = energyPool;
+    public String getEnergyString() {
+        return String.format("Energy: %s", energy.toString());
     }
 
     // methods
@@ -59,47 +50,31 @@ public class Rogue extends Player {
     @Override
     public void turn() {
         super.turn();
-        increaseEnergy(10);
+        energy.addAmount(10);
     }
 
     @Override
     public void castAbility() {
 
-        if (getEnergy() < getAbilityCost()) {
-            msgCallback.call(getName() + " tried to cast " + abilityName + ", but missing " + (getAbilityCost() - getEnergy()) + " energy.");
+        if (energy.getCurrent() < getAbilityCost()) {
+            msgCallback.call(getName() + " tried to cast " + abilityName + ", but missing " + (getAbilityCost() - energy.getCurrent()) + " energy.");
             return;
         }
 
         msgCallback.call(getName() + " cast " + abilityName);
         // filter enemies in range
         List<Unit> enemiesInRange =  enemies.stream().filter(e -> range(e)<2).collect(Collectors.toList());
-                /*new ArrayList<>();
-        for (Enemy enemy : enemies) {
-            if (range(enemy) < 2) {
-                enemiesInRange.add(enemy);
-            }
-        }
 
-                 */
         attackRoll = attackPoints;
         enemiesInRange.forEach(e -> e.dealDamage(this));
-        /*
-        for (Enemy enemy : enemiesInRange) {
-            enemy.dealDamage(this);
-        }
-         */
 
-        decreaseEnergy(getAbilityCost());
+        energy.subAmount(getAbilityCost());
     }
 
     public void lvlUp() {
         super.lvlUp();
-        resetEnergy();
+        energy.init();
         increaseAtt(R_ATTACK_BONUS * level);
-    }
-
-    public String getEnergyString() {
-        return String.format("Energy: %d/%d", getEnergy(), getEnergyPool());
     }
 
     public String description() {

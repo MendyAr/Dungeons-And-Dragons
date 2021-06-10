@@ -1,9 +1,8 @@
 package BusinessLayer.Tiles.Classes;
-import BusinessLayer.Tiles.Enemy;
 import BusinessLayer.Tiles.Player;
 import BusinessLayer.Tiles.Unit;
+import BusinessLayer.util.Cooldown;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,92 +10,72 @@ public class Warrior extends Player {
 
     // fields
 
-    protected static final String abilityName = "Avenger’s Shield";
+    protected static final String abilityName = "Avenger's Shield";
     protected static final int W_HEALTH_BONUS = 5;
     protected static final int W_ATTACK_BONUS = 2;
     protected static final int W_DEFENSE_BONUS = 1;
 
-    private final Integer abilityCooldown;
-    private Integer remainingCooldown;
+    private final Cooldown abilityCooldown;
+    private boolean usedAbility;
 
     // constructor
 
     public Warrior(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, Integer abilityCooldown) {
         super(name, healthPool, attackPoints, defensePoints);
-        this.abilityCooldown = abilityCooldown;
-        this.remainingCooldown = 0;
+        this.abilityCooldown = new Cooldown(abilityCooldown);
     }
 
     // getters & setters
 
-    public Integer getAbilityCooldown() {
-        return abilityCooldown;
-    }
 
-    public Integer getRemainingCooldown() {
-        return remainingCooldown;
-    }
-
-    protected void decCooldown() {
-        remainingCooldown = Math.max(0, getRemainingCooldown() - 1);
-    }
-
-    protected void resetCooldown() {
-        remainingCooldown = 0;
+    public String getCooldownString() {
+        return String.format("Cooldown: %s", abilityCooldown.toString());
     }
 
     // methods
 
     @Override
     public void turn() {
+        usedAbility = false;
         super.turn();
-        decCooldown();
+        if (!usedAbility)
+            abilityCooldown.tick();
     }
 
     @Override
     public void castAbility() {
 
-        if (getRemainingCooldown() > 0) {
-            msgCallback.call(String.format("%s tried to cast %s, but there is a cooldown: %d.", getName() ,abilityName, abilityCooldown));
+        try {
+            abilityCooldown.use();
+        } catch (Exception e) {
+            msgCallback.call(String.format("%s tried to cast %s, but there is a cooldown: %s.", getName(), abilityName, e.getMessage()));
             return;
         }
 
+        usedAbility = true;
         msgCallback.call(getName() + " cast " + abilityName);
         // filter enemies in range
         List<Unit> enemiesInRange = enemies.stream().filter(e -> range(e) < 3).collect(Collectors.toList());
-                /*new ArrayList<>();
-        for (Enemy enemy : enemies) {
-            if (range(enemy) < 3) {
-                enemiesInRange.add(enemy);
-            }
-        }
 
-                 */
         if (enemiesInRange.size() != 0) {
             // choose a random enemy
-            int randomEnemy = rng.generate(0, enemiesInRange.size()-1);
+            int randomEnemy = rng.generate(0, enemiesInRange.size() - 1);
             Unit enemy = enemiesInRange.get(randomEnemy);
             // deal damage
-            attackRoll = (int) (health.getMaxHP() * 0.1);
+            attackRoll = (int) (health.getMax() * 0.1);
             enemy.dealDamage(this);
         }
 
         // heal Warrior
-        health.addHP(10 * defensePoints);
-        remainingCooldown = abilityCooldown;
+        health.addAmount(10 * defensePoints);
     }
 
     public void lvlUp() {
         super.lvlUp();
-        resetCooldown();
+        abilityCooldown.init();
         health.increasePool(W_HEALTH_BONUS * level);
         increaseAtt(W_ATTACK_BONUS * level);
         increaseDef(W_DEFENSE_BONUS * level);
-
-    }
-
-    public String getCooldownString() {
-        return String.format("Cooldown: %d/%d", getRemainingCooldown(), getAbilityCooldown());
     }
 
     public String description() {

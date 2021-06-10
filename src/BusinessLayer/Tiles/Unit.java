@@ -3,10 +3,7 @@ package BusinessLayer.Tiles;
 import BusinessLayer.CallBacks.MessageCallback;
 import BusinessLayer.CallBacks.MoveCallback;
 import BusinessLayer.CallBacks.OnDeathCallback;
-import BusinessLayer.util.Health;
-import BusinessLayer.util.InputProvider;
-import BusinessLayer.util.Position;
-import BusinessLayer.util.RandomNumberGenerator;
+import BusinessLayer.util.*;
 
 import java.util.List;
 
@@ -15,7 +12,7 @@ abstract public class Unit extends Tile{
     //fields
 
     protected final String name;
-    protected Health health;
+    protected Resource health;
     protected Integer attackPoints;
     protected Integer attackRoll;
     protected Integer defensePoints;
@@ -31,7 +28,7 @@ abstract public class Unit extends Tile{
     public Unit(char tileChar, String name, Integer healthPool, Integer attackPoints, Integer defensePoints) {
         super(tileChar);
         this.name = name;
-        this.health = new Health(healthPool);
+        this.health = new Resource(healthPool);
         this.attackPoints = attackPoints;
         this.defensePoints = defensePoints;
     }
@@ -55,8 +52,12 @@ abstract public class Unit extends Tile{
         return name;
     }
 
-    public Health getHealth() {
+    public Resource getHealth() {
         return health;
+    }
+
+    public String getHealthString(){
+        return "Health: " + health;
     }
 
     public String getAttackString() {
@@ -102,7 +103,7 @@ abstract public class Unit extends Tile{
         defend();
         Integer damage = calcDMG(attacker.attackRoll, defenseRoll);
         msgCallback.call(String.format("%s dealt %d damage to %s.", attacker.getName(), damage, getName()));
-        if (health.subHP(damage)){// check if target is not alive
+        if (health.subAmount(damage)){// check if target is not alive
             onKill(attacker);
             onDeath();
         }
@@ -167,7 +168,7 @@ abstract public class Unit extends Tile{
     }
 
     public String description() {
-        return String.format("%s\t\t%s\t%s\t%s", getName(), health.toString(), getAttackString(), getDefenseString());
+        return String.format("%s\t\t%s\t%s\t%s", getName(), getHealthString(), getAttackString(), getDefenseString());
     }
 
     public abstract void turn();

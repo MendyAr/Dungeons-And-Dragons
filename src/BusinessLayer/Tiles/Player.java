@@ -66,8 +66,14 @@ abstract public class Player extends Unit {
         experience -= REQ_EXP * level;
         level++;
         health.increasePool(HEALTH_BONUS * level);
+        health.init();
         increaseAtt(ATTACK_BONUS * level);
         increaseDef(DEFENSE_BONUS * level);
+    }
+
+    @Override
+    public void combat(Unit defender) {
+        super.combat(defender);
     }
 
     @Override
@@ -80,7 +86,6 @@ abstract public class Player extends Unit {
         Integer experience = kill.getExperienceValue();
         msgCallback.call(String.format("%s died. %s gained %d experience.", kill.getName(), getName(), experience));
         addExperience(experience);
-        swapPositions(kill);
     }
 
     @Override
@@ -109,7 +114,7 @@ abstract public class Player extends Unit {
 
     @Override
     public String toString() {
-        return health.getCurrentHP() > 0 ? super.toString() : "X";
+        return health.getCurrent() > 0 ? super.toString() : "X";
     }
 
     abstract public void castAbility();

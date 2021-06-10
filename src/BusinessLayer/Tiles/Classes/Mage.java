@@ -1,10 +1,9 @@
 package BusinessLayer.Tiles.Classes;
 
-import BusinessLayer.Tiles.Enemy;
 import BusinessLayer.Tiles.Player;
 import BusinessLayer.Tiles.Unit;
+import BusinessLayer.util.Resource;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,8 +16,7 @@ public class Mage extends Player {
     protected static final double MANA_REGENERATION_BONUS = 0.25;
     protected static final int SPELL_POWER_BONUS = 10;
 
-    private Integer manaPool;
-    private Integer currentMana;
+    private final Resource mana;
     private Integer spellPower;
     private final Integer manaCost;
     private final Integer hitsCount;
@@ -28,8 +26,8 @@ public class Mage extends Player {
 
     public Mage(String name, Integer healthPool, Integer attackPoints, Integer defensePoints, Integer manaPool, Integer manaCost, Integer spellPower, Integer hitsCount, Integer abilityRange) {
         super(name, healthPool, attackPoints, defensePoints);
-        this.manaPool = manaPool;
-        this.currentMana = manaPool / 4;
+        this.mana = new Resource(manaPool);
+        this.mana.setCurrent(manaPool / 4);
         this.manaCost = manaCost;
         this.spellPower = spellPower;
         this.hitsCount = hitsCount;
@@ -37,14 +35,6 @@ public class Mage extends Player {
     }
 
     // getters & setters
-
-    public Integer getManaPool() {
-        return manaPool;
-    }
-
-    public Integer getCurrentMana() {
-        return currentMana;
-    }
 
     public Integer getSpellPower() {
         return spellPower;
@@ -54,20 +44,16 @@ public class Mage extends Player {
         return manaCost;
     }
 
-    protected void increaseManaPool(Integer increaseVal) {
-        manaPool += increaseVal;
-    }
-
-    protected void regenerateMana(Integer regenerationVal) {
-        currentMana = Math.min(currentMana + currentMana * regenerationVal, manaPool);
-    }
-
-    protected void decreaseMana(Integer decreaseVal) {
-        currentMana = Math.max(currentMana - decreaseVal, 0);
-    }
-
     protected void increaseSpellPower(Integer increaseVal) {
         spellPower +=  increaseVal;
+    }
+
+    public String getManaString(){
+        return String.format("Mana: %s", mana.toString());
+    }
+
+    public String getSpellPowerString(){
+        return String.format("Spell Power: %d", getSpellPower());
     }
 
     // methods
@@ -75,28 +61,21 @@ public class Mage extends Player {
     @Override
     public void turn() {
         super.turn();
-        regenerateMana(1 * level);
+        mana.addAmount(level);
     }
 
     @Override
     public void castAbility() {
 
-        if (getCurrentMana() < getManaCost()) {
-            msgCallback.call(getName() + " tried to cast " + abilityName + ", but missing " + (getManaCost() - getCurrentMana()) + " mana.");
+        if (mana.getCurrent() < getManaCost()) {
+            msgCallback.call(getName() + " tried to cast " + abilityName + ", but missing " + (getManaCost() - mana.getCurrent()) + " mana.");
             return;
         }
 
         msgCallback.call(getName() + " cast " + abilityName);
         // filter enemies in range
         List<Unit> enemiesInRange = enemies.stream().filter(e -> range(e)<abilityRange).collect(Collectors.toList());
-                /*new ArrayList<>();
-        for (Enemy enemy : enemies) {
-            if (range(enemy) < abilityRange) {
-                enemiesInRange.add(enemy);
-            }
-        }
 
-                 */
         int hits = 0;
         attackRoll = getSpellPower();
         while (enemiesInRange.size() != 0 & hits < hitsCount) {
@@ -106,26 +85,18 @@ public class Mage extends Player {
             // deal damage
             enemy.dealDamage(this);
             hits++;
-            if (enemy.getHealth().getCurrentHP() == 0) {
+            if (enemy.getHealth().getCurrent() == 0) {
                 enemiesInRange.remove(enemy);
             }
         }
-        decreaseMana(getManaCost());
+        mana.subAmount(getManaCost());
     }
 
     public void lvlUp() {
         super.lvlUp();
-        increaseManaPool(MANA_POOL_BONUS * level);
-        regenerateMana((int) (getManaPool() * MANA_REGENERATION_BONUS));
+        mana.increasePool(MANA_POOL_BONUS * level);
+        mana.increasePool((int) (mana.getMax() * MANA_REGENERATION_BONUS));
         increaseSpellPower(SPELL_POWER_BONUS * level);
-    }
-
-    public String getManaString(){
-        return String.format("Mana: %d/%d", getCurrentMana(), getManaPool());
-    }
-
-    public String getSpellPowerString(){
-        return String.format("Spell Power: %d", getSpellPower());
     }
 
     public String description() {
