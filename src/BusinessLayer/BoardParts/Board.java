@@ -1,4 +1,4 @@
-package BusinessLayer.Board;
+package BusinessLayer.BoardParts;
 
 import BusinessLayer.Tiles.*;
 import BusinessLayer.CallBacks.LevelOverCallback;

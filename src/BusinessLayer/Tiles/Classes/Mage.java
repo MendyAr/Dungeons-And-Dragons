@@ -5,6 +5,7 @@ import BusinessLayer.Tiles.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Mage extends Player {
 
@@ -64,8 +65,8 @@ public class Mage extends Player {
         currentMana = Math.min(currentMana - decreaseVal, 0);
     }
 
-    protected void increaseSpellPower(Integer IncreaseVal) {
-        spellPower +=  IncreaseVal;
+    protected void increaseSpellPower(Integer increaseVal) {
+        spellPower +=  increaseVal;
     }
 
     // methods
@@ -86,17 +87,20 @@ public class Mage extends Player {
 
         msgCallback.call(getName() + " cast " + abilityName);
         // filter enemies in range
-        List<Enemy> enemiesInRange = new ArrayList<>();
+        List<Enemy> enemiesInRange = enemies.stream().filter(e -> range(e)<abilityRange).collect(Collectors.toList());
+                /*new ArrayList<>();
         for (Enemy enemy : enemies) {
             if (range(enemy) < abilityRange) {
                 enemiesInRange.add(enemy);
             }
         }
+
+                 */
         int hits = 0;
         attackRoll = getSpellPower();
         while (enemiesInRange.size() != 0 & hits < hitsCount) {
             // choose a random enemy
-            int randomEnemy = (int) (Math.random() * enemiesInRange.size());
+            int randomEnemy = rng.generate(0, enemiesInRange.size()-1);
             Enemy enemy = enemiesInRange.get(randomEnemy);
             // deal damage
             enemy.dealDamage(this);

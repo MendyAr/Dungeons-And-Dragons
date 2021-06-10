@@ -1,7 +1,7 @@
 package UI;
 
-import BusinessLayer.Board.Board;
-import BusinessLayer.Board.BoardInitializer;
+import BusinessLayer.BoardParts.Board;
+import BusinessLayer.BoardParts.BoardInitializer;
 
 public class GameManager {
 

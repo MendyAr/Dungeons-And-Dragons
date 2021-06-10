@@ -4,6 +4,7 @@ import BusinessLayer.Tiles.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Warrior extends Player {
 
@@ -55,21 +56,24 @@ public class Warrior extends Player {
     public void castAbility() {
 
         if (getRemainingCooldown() > 0) {
-            msgCallback.call(getName() + " tried to cast " + abilityName + ", but there is a cooldown: " + abilityCooldown + ".");
+            msgCallback.call(String.format("%s tried to cast %s, but there is a cooldown: %d.", getName() ,abilityName, abilityCooldown));
             return;
         }
 
         msgCallback.call(getName() + " cast " + abilityName);
         // filter enemies in range
-        List<Enemy> enemiesInRange = new ArrayList<>();
+        List<Enemy> enemiesInRange = enemies.stream().filter(e -> range(e) < 3).collect(Collectors.toList());
+                /*new ArrayList<>();
         for (Enemy enemy : enemies) {
             if (range(enemy) < 3) {
                 enemiesInRange.add(enemy);
             }
         }
+
+                 */
         if (enemiesInRange.size() != 0) {
             // choose a random enemy
-            int randomEnemy = (int) (Math.random() * enemiesInRange.size());
+            int randomEnemy = rng.generate(0, enemiesInRange.size()-1);
             Enemy enemy = enemiesInRange.get(randomEnemy);
             // deal damage
             attackRoll = (int) (health.getMaxHP() * 0.1);

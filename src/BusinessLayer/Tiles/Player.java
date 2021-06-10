@@ -1,5 +1,6 @@
 package BusinessLayer.Tiles;
 
+import BusinessLayer.util.InputProvider;
 import BusinessLayer.util.Position;
 
 import java.util.List;
@@ -18,13 +19,13 @@ abstract public class Player extends Unit{
     protected Integer level;
     protected Integer experience;
     protected List<Enemy> enemies;
+    protected InputProvider inputProvider = InputProvider.getInputProvider();
 
 
     //constructors
 
     public Player(String name, Integer healthPool, Integer attackPoints, Integer defensePoints) {
         super(playerTile, name, healthPool, attackPoints, defensePoints);
-        this.enemies = enemies;
         level = 1;
         experience = 0;
     }

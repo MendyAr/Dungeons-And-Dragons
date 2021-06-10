@@ -25,7 +25,6 @@ abstract public class Unit extends Tile{
     protected MessageCallback msgCallback;
     protected MoveCallback moveCallback;
     protected RandomNumberGenerator rng;
-    protected InputProvider inputProvider = InputProvider.getInputProvider();
 
     //constructor
 
