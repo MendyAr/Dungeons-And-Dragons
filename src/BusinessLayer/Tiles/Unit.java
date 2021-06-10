@@ -68,11 +68,7 @@ abstract public class Unit extends Tile{
         return "Defense: " + defensePoints;
     }
 
-    //methods
-    public String description() {
-        return String.format("%s\t\t%s\t%s\t%s", getName(), health.toString(), getAttackString(), getDefenseString());
-    }
-
+    // setters
     public void increaseAtt(Integer value){
         attackPoints += value;
     }
@@ -81,6 +77,9 @@ abstract public class Unit extends Tile{
         defensePoints += value;
     }
 
+    //methods
+
+    // combat methods
     public void attack() {
         attackRoll = rng.generate(0, attackPoints);
         msgCallback.call(String.format("%s rolled %d attack points.", getName(), attackRoll));
@@ -98,7 +97,7 @@ abstract public class Unit extends Tile{
     public void dealDamage(Unit attacker){
         Integer damage = calcDMG(attacker.attackRoll, defenseRoll);
         msgCallback.call(String.format("%s dealt %d damage to %s.", attacker.getName(), damage, getName()));
-        if (health.subHP(damage)){
+        if (health.subHP(damage)){// check if target is not alive
             onKill(attacker);
             onDeath();
         }
@@ -113,6 +112,7 @@ abstract public class Unit extends Tile{
         defender.dealDamage(this);
     }
 
+    // tile interactions
     public void visited(Empty empty) {
         Position tmp = empty.getPosition();
         empty.setPosition(getPosition());
@@ -124,6 +124,7 @@ abstract public class Unit extends Tile{
     public abstract void visited(Enemy enemy);
     public abstract void visited(Player player);
 
+    // actions
     public void moveLeft(){
         moveCallback.move(new Position(position.getPositionX()-1, position.getPositionY()));
     }
@@ -161,6 +162,10 @@ abstract public class Unit extends Tile{
                 moveRight();
                 break;
         }
+    }
+
+    public String description() {
+        return String.format("%s\t\t%s\t%s\t%s", getName(), health.toString(), getAttackString(), getDefenseString());
     }
 
     public abstract void turn();
