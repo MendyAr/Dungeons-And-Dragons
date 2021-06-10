@@ -104,6 +104,7 @@ public class BoardInitializer {
                             throw new IllegalArgumentException(String.format("Level %s has illegal character: '%c'", level.getName(), tileChar));
                         tile = enemyFactory.get(tileChar).get();
                         ((Enemy)tile).init(position, players, () -> board.onEnemyDeath((Enemy) tile), messageCallback, (pos) -> board.move((Enemy) tile, pos), TrueRNG.getInstance());
+                        enemies.add((Enemy) tile);
                         tiles.add(tile);
                         break;
                 }
