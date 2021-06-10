@@ -77,6 +77,11 @@ abstract public class Unit extends Tile{
     }
 
     //methods
+    public void swapPositions(Tile tile){
+        Position tmp = getPosition();
+        setPosition(tile.getPosition());
+        tile.setPosition(tmp);
+    }
 
     // combat methods
     public void attack() {
@@ -94,6 +99,7 @@ abstract public class Unit extends Tile{
     }
 
     public void dealDamage(Unit attacker){
+        defend();
         Integer damage = calcDMG(attacker.attackRoll, defenseRoll);
         msgCallback.call(String.format("%s dealt %d damage to %s.", attacker.getName(), damage, getName()));
         if (health.subHP(damage)){// check if target is not alive
@@ -107,15 +113,12 @@ abstract public class Unit extends Tile{
         msgCallback.call(description());
         msgCallback.call(defender.description());
         attack();
-        defender.defend();
         defender.dealDamage(this);
     }
 
     // tile interactions
     public void visited(Empty empty) {
-        Position tmp = empty.getPosition();
-        empty.setPosition(getPosition());
-        setPosition(tmp);
+        swapPositions(empty);
     }
 
     public void visited(Wall wall){}

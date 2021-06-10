@@ -54,15 +54,6 @@ abstract public class Player extends Unit {
         combat(player);
     }
 
-    public void visited(Wall wall) {
-    }
-
-    public void visited(Empty empty) {
-        Position tmp = getPosition();
-        setPosition(empty.getPosition());
-        empty.setPosition(tmp);
-    }
-
     protected void addExperience(Integer value) {
         experience += value;
         msgCallback.call(getName() + " gained " + value + " experience.");
@@ -89,6 +80,7 @@ abstract public class Player extends Unit {
         Integer experience = kill.getExperienceValue();
         msgCallback.call(String.format("%s died. %s gained %d experience.", kill.getName(), getName(), experience));
         addExperience(experience);
+        swapPositions(kill);
     }
 
     @Override
