@@ -1,6 +1,7 @@
 package BusinessLayer.Tiles.Classes;
 import BusinessLayer.Tiles.Enemy;
 import BusinessLayer.Tiles.Player;
+import BusinessLayer.Tiles.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +63,7 @@ public class Warrior extends Player {
 
         msgCallback.call(getName() + " cast " + abilityName);
         // filter enemies in range
-        List<Enemy> enemiesInRange = enemies.stream().filter(e -> range(e) < 3).collect(Collectors.toList());
+        List<Unit> enemiesInRange = enemies.stream().filter(e -> range(e) < 3).collect(Collectors.toList());
                 /*new ArrayList<>();
         for (Enemy enemy : enemies) {
             if (range(enemy) < 3) {
@@ -74,7 +75,7 @@ public class Warrior extends Player {
         if (enemiesInRange.size() != 0) {
             // choose a random enemy
             int randomEnemy = rng.generate(0, enemiesInRange.size()-1);
-            Enemy enemy = enemiesInRange.get(randomEnemy);
+            Unit enemy = enemiesInRange.get(randomEnemy);
             // deal damage
             attackRoll = (int) (health.getMaxHP() * 0.1);
             enemy.dealDamage(this);

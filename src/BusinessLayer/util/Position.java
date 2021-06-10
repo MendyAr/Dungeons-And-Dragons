@@ -1,5 +1,7 @@
 package BusinessLayer.util;
 
+import java.util.Objects;
+
 public class Position implements Comparable<Position>{
 
     //fields
@@ -50,5 +52,18 @@ public class Position implements Comparable<Position>{
             return yDist;
         }
         return positionX - P.positionX;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Position position = (Position) o;
+        return positionX == position.positionX && positionY == position.positionY;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(positionX, positionY);
     }
 }

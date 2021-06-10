@@ -5,7 +5,7 @@ import BusinessLayer.util.Position;
 
 import java.util.List;
 
-abstract public class Player extends Unit{
+abstract public class Player extends Unit {
 
     //fields
 
@@ -18,7 +18,7 @@ abstract public class Player extends Unit{
     protected final String abilityName = null;
     protected Integer level;
     protected Integer experience;
-    protected List<Enemy> enemies;
+    //protected List<Enemy> enemies;
     protected InputProvider inputProvider = InputProvider.getInputProvider();
 
 
@@ -37,18 +37,25 @@ abstract public class Player extends Unit{
         getAction();
     }
 
-    public void getAction(){ inputProvider.getAction(this); }
+    public void getAction() {
+        inputProvider.getAction(this);
+    }
 
     @Override
     public void interact(Unit unit) {
         unit.visited(this);
     }
 
-    public void visited(Enemy enemy) { combat(enemy); }
+    public void visited(Enemy enemy) {
+        combat(enemy);
+    }
 
-    public void visited(Player player) { combat(player); }
+    public void visited(Player player) {
+        combat(player);
+    }
 
-    public void visited(Wall wall) {}
+    public void visited(Wall wall) {
+    }
 
     public void visited(Empty empty) {
         Position tmp = getPosition();
@@ -56,10 +63,10 @@ abstract public class Player extends Unit{
         empty.setPosition(tmp);
     }
 
-    protected void addExperience(Integer value){
+    protected void addExperience(Integer value) {
         experience += value;
         msgCallback.call(getName() + " gained " + value + " experience.");
-        while (experience >= level*REQ_EXP){
+        while (experience >= level * REQ_EXP) {
             lvlUp();
         }
     }
@@ -96,21 +103,22 @@ abstract public class Player extends Unit{
     }
 
 
-    public String description(){
-        return String.format("%s\t%s\t%s", super.description(), getLevelString() ,getExperienceString());
+    public String description() {
+        return String.format("%s\t%s\t%s", super.description(), getLevelString(), getExperienceString());
     }
 
-    protected String getLevelString(){
-        return String.format("Level: %d",level);
+    protected String getLevelString() {
+        return String.format("Level: %d", level);
     }
 
-    protected String getExperienceString(){
+    protected String getExperienceString() {
         return String.format("Experience: %d/%d", experience, (level * REQ_EXP));
     }
 
     @Override
-    public String toString(){ return health.getCurrentHP() > 0 ? super.toString() : "X"; }
+    public String toString() {
+        return health.getCurrentHP() > 0 ? super.toString() : "X";
+    }
 
     abstract public void castAbility();
-
 }

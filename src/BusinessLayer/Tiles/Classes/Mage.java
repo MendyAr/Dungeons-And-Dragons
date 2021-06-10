@@ -2,6 +2,7 @@ package BusinessLayer.Tiles.Classes;
 
 import BusinessLayer.Tiles.Enemy;
 import BusinessLayer.Tiles.Player;
+import BusinessLayer.Tiles.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +88,7 @@ public class Mage extends Player {
 
         msgCallback.call(getName() + " cast " + abilityName);
         // filter enemies in range
-        List<Enemy> enemiesInRange = enemies.stream().filter(e -> range(e)<abilityRange).collect(Collectors.toList());
+        List<Unit> enemiesInRange = enemies.stream().filter(e -> range(e)<abilityRange).collect(Collectors.toList());
                 /*new ArrayList<>();
         for (Enemy enemy : enemies) {
             if (range(enemy) < abilityRange) {
@@ -101,7 +102,7 @@ public class Mage extends Player {
         while (enemiesInRange.size() != 0 & hits < hitsCount) {
             // choose a random enemy
             int randomEnemy = rng.generate(0, enemiesInRange.size()-1);
-            Enemy enemy = enemiesInRange.get(randomEnemy);
+            Unit enemy = enemiesInRange.get(randomEnemy);
             // deal damage
             enemy.dealDamage(this);
             hits++;

@@ -8,6 +8,7 @@ import BusinessLayer.util.TileComparator;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Board {
 
@@ -44,20 +45,28 @@ public class Board {
     }
 
     public String toString(){
-        board.sort(tileComparator);
-        String str = "";//board.stream().map(t -> t.getPosition().getPositionY() == 0 ? "\n" + t.toString() : t.toString()).toString();
+        String str = board.stream().sorted(tileComparator)
+                .map(t -> t.getPosition().getPositionX() == 0 ? "\n" + t.toString() : t.toString())
+                .collect(Collectors.joining(""));
 
+        /*
         for (Tile tile: board){
             if (tile.getPosition().getPositionY() == 0)
-                str += "\n";
-            str += tile;
+                str.append("\n");
+            str.append(tile);
         }
 
-        //str += players.stream().map(p -> "\n" + p.description()).toString();
+         */
 
+        str += players.stream().map(p -> "\n" + p.description())
+                .collect(Collectors.joining(""));
+
+        /*
         for (Player player: players)
-            str += "\n" + player.description();
+            str.append("\n").append(player.description());
 
+
+         */
         return str.substring(1);
     }
 

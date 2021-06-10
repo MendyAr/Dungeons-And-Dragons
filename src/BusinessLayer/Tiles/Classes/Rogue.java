@@ -1,6 +1,7 @@
 package BusinessLayer.Tiles.Classes;
 import BusinessLayer.Tiles.Enemy;
 import BusinessLayer.Tiles.Player;
+import BusinessLayer.Tiles.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +72,7 @@ public class Rogue extends Player {
 
         msgCallback.call(getName() + " cast " + abilityName);
         // filter enemies in range
-        List<Enemy> enemiesInRange =  enemies.stream().filter(e -> range(e)<2).collect(Collectors.toList());
+        List<Unit> enemiesInRange =  enemies.stream().filter(e -> range(e)<2).collect(Collectors.toList());
                 /*new ArrayList<>();
         for (Enemy enemy : enemies) {
             if (range(enemy) < 2) {
