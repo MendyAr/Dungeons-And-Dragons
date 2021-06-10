@@ -59,11 +59,11 @@ public class Mage extends Player {
     }
 
     protected void regenerateMana(Integer regenerationVal) {
-        currentMana = Math.max(currentMana + currentMana * regenerationVal, manaPool);
+        currentMana = Math.min(currentMana + currentMana * regenerationVal, manaPool);
     }
 
     protected void decreaseMana(Integer decreaseVal) {
-        currentMana = Math.min(currentMana - decreaseVal, 0);
+        currentMana = Math.max(currentMana - decreaseVal, 0);
     }
 
     protected void increaseSpellPower(Integer increaseVal) {

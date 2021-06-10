@@ -38,7 +38,7 @@ public class Warrior extends Player {
     }
 
     protected void decCooldown() {
-        remainingCooldown = Math.min(0, getRemainingCooldown() - 1);
+        remainingCooldown = Math.max(0, getRemainingCooldown() - 1);
     }
 
     protected void resetCooldown() {
