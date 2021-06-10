@@ -32,7 +32,7 @@ public class Board {
     }
 
     public void play(){
-        while (!enemies.isEmpty() && players.isEmpty()){
+        while (!enemies.isEmpty() && !players.isEmpty()){
             for (Player player: players){
                 messageCallback.call(toString());
                 player.turn();
