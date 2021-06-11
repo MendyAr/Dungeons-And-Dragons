@@ -7,10 +7,7 @@ import BusinessLayer.Tiles.Classes.Warrior;
 import BusinessLayer.Tiles.Enemies.Monster;
 import BusinessLayer.Tiles.Enemies.Trap;
 import BusinessLayer.CallBacks.MessageCallback;
-import BusinessLayer.util.LevelsComparator;
-import BusinessLayer.util.Position;
-import BusinessLayer.util.Supplier;
-import BusinessLayer.util.TrueRNG;
+import BusinessLayer.util.*;
 
 import java.io.*;
 import java.util.*;
@@ -95,7 +92,7 @@ public class BoardInitializer {
                         break;
                     case '@':
                         for (Player player: players){
-                            player.init(position, enemies, () -> board.onPlayerDeath(player), messageCallback, (pos) -> board.move(player, pos), TrueRNG.getInstance());
+                            player.init(position, enemies, () -> board.onPlayerDeath(player), messageCallback, (pos) -> board.move(player, pos), TrueRNG.getInstance(), TrueInputProvider.getInputProvider());
                             tiles.add(player);
                         }
                         break;

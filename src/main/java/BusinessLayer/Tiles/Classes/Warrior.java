@@ -54,12 +54,16 @@ public class Warrior extends Player {
 
         // heal Warrior
         health.addAmount(10 * defensePoints);
+
+        //reset cooldown
+        abilityResource.setCurrent(abilityResource.getMax());
     }
 
     public void lvlUp() {
         super.lvlUp();
         getAbilityResource().init();
         getHealth().increasePool(W_HEALTH_BONUS * level);
+        health.init();
         increaseAtt(W_ATTACK_BONUS * level);
         increaseDef(W_DEFENSE_BONUS * level);
     }

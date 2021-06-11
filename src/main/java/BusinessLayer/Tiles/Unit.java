@@ -56,12 +56,16 @@ abstract public class Unit extends Tile{
         return health;
     }
 
+    public int getAttack(){return attackPoints; }
+
+    public int getDefence(){return defensePoints; }
+
     public String getAttackString() {
-        return "Attack: " + attackPoints;
+        return "Attack: " + getAttack();
     }
 
     public String getDefenseString() {
-        return "Defense: " + defensePoints;
+        return "Defense: " + getDefence();
     }
 
     // setters
