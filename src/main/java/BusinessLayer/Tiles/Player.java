@@ -1,7 +1,11 @@
 package BusinessLayer.Tiles;
 
+import BusinessLayer.CallBacks.MessageCallback;
+import BusinessLayer.CallBacks.MoveCallback;
+import BusinessLayer.CallBacks.OnDeathCallback;
 import BusinessLayer.util.InputProvider;
 import BusinessLayer.util.Position;
+import BusinessLayer.util.RandomNumberGenerator;
 import BusinessLayer.util.Resource;
 
 import java.util.List;
@@ -21,7 +25,7 @@ abstract public class Player extends Unit {
     protected String abilityName;
     protected Resource abilityResource;
     protected boolean abilityUsed;
-    protected InputProvider inputProvider = InputProvider.getInputProvider();
+    protected InputProvider inputProvider;
 
 
     //constructors
@@ -32,6 +36,12 @@ abstract public class Player extends Unit {
         experience = 0;
         this.abilityName = abilityName;
         this.abilityResource = abilityResource;
+    }
+
+    // initialization - adding InputProvider initialization
+    public void init(Position position, List<? extends Unit> enemies, OnDeathCallback deathCallback, MessageCallback msgCallback, MoveCallback moveCallback, RandomNumberGenerator rng, InputProvider inputProvider) {
+        super.init(position, enemies, deathCallback, msgCallback, moveCallback, rng);
+        this.inputProvider = inputProvider;
     }
 
     //getters
@@ -105,7 +115,7 @@ abstract public class Player extends Unit {
         Integer experience = kill.getExperienceValue();
         if (!abilityUsed)
             swapPositions(kill);
-        msgCallback.call(String.format("%s died. %s gained %d experience.", kill.getName(), getName(), experience));
+        msgCallback.call(String.format("%s died.", kill.getName()));
         addExperience(experience);
     }
 
